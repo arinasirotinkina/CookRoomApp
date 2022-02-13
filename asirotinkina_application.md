@@ -46,8 +46,8 @@
 
 **[ ИНСТРУМЕНТЫ РАЗРАБОТКИ ]**
 
-*	Java / Android Studio – для разработки Android-версии
-*	SQLite - база данных
+*	Kotlin / Android Studio – для разработки Android-версии
+*	Firebase - для хранения данных
 
 **[ ЭТАПЫ РАЗРАБОТКИ ]**
 
