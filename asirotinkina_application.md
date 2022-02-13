@@ -47,7 +47,7 @@
 **[ ИНСТРУМЕНТЫ РАЗРАБОТКИ ]**
 
 *	Kotlin / Android Studio – для разработки Android-версии
-*	Firebase - для хранения данных
+*	Firebase Realtime Database - для хранения данных
 
 **[ ЭТАПЫ РАЗРАБОТКИ ]**
 
