@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name" translatable="false">CookRoom</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string-array name="measureVals">
+        <item>кг</item>
+        <item>г</item>
+        <item>л</item>
+        <item>мл</item>
+    </string-array>
+</resources>

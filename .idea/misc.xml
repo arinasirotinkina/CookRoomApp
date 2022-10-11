@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/arina/AndroidStudioProjects/CookRoom/app/src/main/res/drawable/bottom_nav_selector.xml" value="0.2085" />
+        <entry key="..\:/Users/arina/AndroidStudioProjects/CookRoom/app/src/main/res/drawable/cicon.xml" value="0.2085" />
+        <entry key="..\:/Users/arina/AndroidStudioProjects/CookRoom/app/src/main/res/drawable/ic_add.xml" value="0.2085" />
+        <entry key="..\:/Users/arina/AndroidStudioProjects/CookRoom/app/src/main/res/drawable/ic_baseline_restaurant_24.xml" value="0.2085" />
+        <entry key="..\:/Users/arina/AndroidStudioProjects/CookRoom/app/src/main/res/layout/activity_able_cook.xml" value="0.19610507246376813" />
+        <entry key="..\:/Users/arina/AndroidStudioProjects/CookRoom/app/src/main/res/layout/activity_add_ingred.xml" value="0.1" />
+        <entry key="..\:/Users/arina/AndroidStudioProjects/CookRoom/app/src/main/res/layout/activity_disable_cook.xml" value="0.25" />
+        <entry key="..\:/Users/arina/AndroidStudioProjects/CookRoom/app/src/main/res/layout/activity_edit_product.xml" value="0.19610507246376813" />
+        <entry key="..\:/Users/arina/AndroidStudioProjects/CookRoom/app/src/main/res/layout/activity_edit_recipe.xml" value="0.19610507246376813" />
+        <entry key="..\:/Users/arina/AndroidStudioProjects/CookRoom/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/arina/AndroidStudioProjects/CookRoom/app/src/main/res/layout/activity_product_list.xml" value="0.19610507246376813" />
+        <entry key="..\:/Users/arina/AndroidStudioProjects/CookRoom/app/src/main/res/layout/card_view_item_grid.xml" value="0.19610507246376813" />
+        <entry key="..\:/Users/arina/AndroidStudioProjects/CookRoom/app/src/main/res/layout/colors.xml" value="0.19610507246376813" />
+        <entry key="..\:/Users/arina/AndroidStudioProjects/CookRoom/app/src/main/res/layout/fragment_products.xml" value="0.19610507246376813" />
+        <entry key="..\:/Users/arina/AndroidStudioProjects/CookRoom/app/src/main/res/layout/product_view_item.xml" value="0.19610507246376813" />
+        <entry key="..\:/Users/arina/AndroidStudioProjects/CookRoom/app/src/main/res/layout/recipe_view_item.xml" value="0.19610507246376813" />
+        <entry key="..\:/Users/arina/AndroidStudioProjects/CookRoom/app/src/main/res/layout/shop_view_item.xml" value="0.1" />
+        <entry key="..\:/Users/arina/AndroidStudioProjects/CookRoom/app/src/main/res/menu/buttom_menu.xml" value="0.26927083333333335" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
