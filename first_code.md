@@ -1,5 +1,9 @@
-## https://github.com/arinasirotinkina/cookroom
+# https://github.com/arinasirotinkina/cookroom
+
 #1. Создан проект
+
 #2. Реализованы активности списка продуктов, рецептов и списка покупок
+
 #3. Реализованы классы Product, Recipe, Category
+
 #4. Реализованы пользовательские сценарии 1, 5, 7.
