@@ -57,7 +57,7 @@ class ProductsFragment : Fragment(), AdapterView.OnItemClickListener {
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         var items : CategoryItem = arrayList!!.get(position)
-        Toast.makeText(requireContext(), items.name, Toast.LENGTH_LONG).show()
+        //Toast.makeText(requireContext(), items.name, Toast.LENGTH_LONG).show()
         val intent = Intent(requireContext(), ProductListActivity::class.java)
         intent.putExtra("CHOSEN", items.name)
         startActivity(intent)

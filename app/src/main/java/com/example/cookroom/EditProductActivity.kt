@@ -1,20 +1,14 @@
 package com.example.cookroom
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.strictmode.IntentReceiverLeakedViolation
-import android.text.Layout
 import android.view.View
 import android.widget.*
-import androidx.constraintlayout.widget.ConstraintLayout
-import com.example.cookroom.R
 import com.example.cookroom.db.products.ProdIntentConstants
-import com.example.cookroom.db.products.ProdDbManager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.example.cookroom.db.products.ProductsDbManager
 
 class EditProductActivity : AppCompatActivity() {
-    val myDbManager = ProdDbManager(this)
+
     var id = 0
     var isEditState = false
     var edTitle : EditText? = null
@@ -22,12 +16,15 @@ class EditProductActivity : AppCompatActivity() {
     var edMeasure : Spinner? = null
     var prodCategory : String  =""
     val measureVals = listOf<String>("кг", "г", "л", "мл")
+    val productsDbManager = ProductsDbManager()
+    var sessionManager= SessionManager(this)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_product)
         edTitle = findViewById(R.id.edTitle)
         edAmount = findViewById(R.id.edAmount)
         edMeasure = findViewById(R.id.edMeasure)
+        sessionManager.sessionManage(this)
         getMyIntents()
     }
 
@@ -40,11 +37,19 @@ class EditProductActivity : AppCompatActivity() {
         val myAmount1 = edAmount?.text.toString()
         val myAmount = myAmount1.toInt()
         val myMeasure = edMeasure?.selectedItem.toString()
+
+        var pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
+        var user_id = pref.getString("user_id", "-1")
         if (myTitle != "" && myMeasure != "") {
             if (isEditState) {
-                myDbManager.updateItem(myTitle, myCategory, myAmount, myMeasure, id)
+                prodCategory = intentProd!!.getStringExtra(ProdIntentConstants.I_CATEGORY_KEY)
+                //Toast.makeText(this, id.toString(), Toast.LENGTH_LONG).show()
+                //myDbManager.updateItem(myTitle, myCategory, myAmount, myMeasure, id)
+                productsDbManager.updateToDB(this, myTitle, prodCategory.toString(), myAmount1, myMeasure, user_id.toString(), id.toString())
+
             } else {
-                myDbManager.insertToDb(myTitle, myCategory, myAmount, myMeasure)
+                //myDbManager.insertToDb(myTitle, myCategory, myAmount, myMeasure)
+                productsDbManager.insertToDb(this, myTitle, myCategory, myAmount1,myMeasure, user_id!!)
             }
             finish()
         }
@@ -53,12 +58,12 @@ class EditProductActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        myDbManager.openDb()
+        //myDbManager.openDb()
 
     }
     override fun onDestroy() {
         super.onDestroy()
-        myDbManager.closeDb()
+        //myDbManager.closeDb()
     }
     fun getMyIntents() {
         val i = intent
@@ -68,6 +73,9 @@ class EditProductActivity : AppCompatActivity() {
                 edTitle?.setText(i.getStringExtra(ProdIntentConstants.I_TITLE_KEY))
                 edAmount?.setText(i.getStringExtra(ProdIntentConstants.I_AMOUNT_KEY))
                 edMeasure?.setSelection(measureVals.indexOf(i.getStringExtra(ProdIntentConstants.I_MEASURE_KEY)))
+                prodCategory = i.getStringExtra(ProdIntentConstants.I_CATEGORY_KEY)!!
+                //Toast.makeText(this, prodCategory, Toast.LENGTH_LONG).show()
+
                 id = i.getIntExtra(ProdIntentConstants.I_ID_KEY, 0)
             }
         }

@@ -1,76 +1,117 @@
 package com.example.cookroom
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.AuthFailureError
+import com.android.volley.Response
+import com.android.volley.VolleyError
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.example.cookroom.adapters.IngredAdapter
 import com.example.cookroom.adapters.ItemProductAdapter
-import com.example.cookroom.db.depending.DepDbManager
-import com.example.cookroom.db.products.ProdDbManager
-import com.example.cookroom.models.DepItem
+import com.example.cookroom.db.depending.DepenDbManager
+import com.example.cookroom.db.products.ProductsDbManager
 import com.example.cookroom.models.ProdItem
+import org.json.JSONException
+import org.json.JSONObject
 
 
 class AddIngredActivity : AppCompatActivity() {
-    var addTitle :EditText? = null
     var addAmount : EditText? = null
-    var productId:Int? = null
-    var productDbManager = ProdDbManager(this)
-    var depDbManager = DepDbManager(this)
     var addIngreds :Button? = null
     var rcView: RecyclerView? = null
     val myAdapter = IngredAdapter(ArrayList(), this)
-
+    val productsDbManager = ProductsDbManager()
+    var depenDbManager = DepenDbManager()
+    var addTitle : AutoCompleteTextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_ingred)
-        var addMeasure = findViewById<Spinner>(R.id.chooseMeasure)
-        var selected : String = addMeasure.selectedItem.toString()
+        val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
+        val user_id = pref.getString("user_id", "-1")
         addIngreds = findViewById(R.id.addButton)
         addTitle = findViewById(R.id.addTitle)
         addAmount = findViewById(R.id.addAmount)
         rcView = findViewById(R.id.rcView)
-        val kt = intent
-        var recipeId = kt.getIntExtra("CHOSEN", -1)
+        var selList = ArrayList<String>()
+        var selectList = productsDbManager.selector(this, user_id!!, selList)
+        val adapterSel = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, selectList)
+        addTitle!!.threshold = 1
+        addTitle!!.setAdapter(adapterSel)
+        addTitle!!.onFocusChangeListener = View.OnFocusChangeListener{ _, hasFocus ->
+            if (hasFocus) {
+                addTitle!!.showDropDown()
+            }
+        }
+        addTitle!!.onItemClickListener = AdapterView.OnItemClickListener {parent, _, position, id ->
+            val selectedItem = parent.getItemAtPosition(position).toString()
+        }
         init()
-        fillAdapter()
-
+        readDbData()
     }
 
     override fun onStart() {
         super.onStart()
-        fillAdapter()
+        readDbData()
     }
 
 
     fun AddIngred(view: View) {
         val kt = intent
+        var recipeId = kt.getStringExtra("CHOSEN")
         var addMeasure = findViewById<Spinner>(R.id.chooseMeasure)
-        var selected : String = addMeasure.selectedItem.toString()
-        var product = addTitle?.text.toString()
         var amount1 = addAmount?.text.toString()
-        var amount = amount1.toInt()
-        productDbManager.openDb()
-        depDbManager.openDb()
-        val list = productDbManager.readProduct(product)
-        if (list.size != 0){
-            productId = list[0].id
-        }
-        var recipeId = kt.getIntExtra("CHOSEN", -1)
+        val myMeasure = addMeasure?.selectedItem.toString()
+        val title = addTitle!!.text.toString()
+        val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
+        val user_id = pref.getString("user_id", "-1")
 
-        if (productId != null && amount1 != "" && recipeId != -1) {
-            //NToast.makeText(this, "$amount", Toast.LENGTH_LONG).show()
-            depDbManager.insertToDb(recipeId, productId!!, amount, selected)
+        val URL_SEARCH = "http://arinasyw.beget.tech/products_getid.php"
+        var stringRequest = object : StringRequest(
+            Method.POST, URL_SEARCH,
+            Response.Listener<String> { response ->
+                try {
+                    val jsonObject = JSONObject(response.toString())
+                    val success = jsonObject.getString("success")
+                    val jsonArray = jsonObject.getJSONArray("product")
+                    if (success.equals("1")) {
+                        for (i in 0 until jsonArray.length()) {
+                            var obj = jsonArray.getJSONObject(i)
+                            var ids = obj.getString("id").trim()
+                            depenDbManager.insertToDb(this, recipeId!!, ids, title, amount1, myMeasure, user_id!!)
+
+                        }
+                        readDbData()
+                    }
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            },
+            object : Response.ErrorListener {
+                override fun onErrorResponse(error: VolleyError?) {
+                    //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
+                }
+            }) {
+            @Throws(AuthFailureError::class)
+            override fun getParams(): Map<String, String>? {
+                var params : HashMap<String, String> = HashMap<String, String>()
+                params.put("user_id", user_id!!)
+                params.put("title", title)
+                return params
+            }
         }
-        fillAdapter()
+        var requestQueue = Volley.newRequestQueue(this)
+        requestQueue.add(stringRequest)
+
+
 
 
     }
@@ -81,28 +122,63 @@ class AddIngredActivity : AppCompatActivity() {
         rcView?.adapter = myAdapter
     }
 
-    fun fillAdapter() {
-        val kt = intent
-        var recipeId = kt.getIntExtra("CHOSEN", -1)
-        depDbManager.openDb()
-        val list = depDbManager.readDbData(recipeId)
-        productDbManager.openDb()
-        var ingredList  = ArrayList<ProdItem>()
-        val prodList = productDbManager.readDbData("", "")
-        for (item in list) {
-            var temp = ProdItem()
-            for (product in prodList){
-                if (product.id.toString() == item.product){
-                    temp.title = product.title
-                    temp.id = productId
-                    temp.category = product.category
-                }
-            }
-            temp.amount = item.amount
-            temp.measure = item.measure
-            ingredList.add(temp)
-        }
+    fun fillAdapter(ingredList: ArrayList<ProdItem>) {
         myAdapter.updateAdapter(ingredList)
+    }
+    fun readDbData() {
+        val URL_READ = "http://arinasyw.beget.tech/depending_readall.php"
+        val kt = intent
+        var recipeId = kt.getStringExtra("CHOSEN")
+        var pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
+        var user_id = pref.getString("user_id", "-1")
+        var stringRequest = object : StringRequest(
+            Method.POST, URL_READ,
+            Response.Listener<String> { response ->
+                try {
+                    val jsonObject = JSONObject(response.toString())
+                    val success = jsonObject.getString("success")
+                    val jsonArray = jsonObject.getJSONArray("product")
+                    val list = java.util.ArrayList<ProdItem>()
+                    if (success.equals("1")) {
+                        for (i in 0 until jsonArray.length()) {
+                            val obj = jsonArray.getJSONObject(i)
+                            var title = obj.getString("title").trim()
+                            var amount = obj.getString("amount").trim()
+                            var measure = obj.getString("measure").trim()
+                            var item = ProdItem()
+                            item.title = title
+                            item.amount = amount.toInt()
+                            item.measure = measure
+                            item.id = 0
+                            item.category = ""
+
+                            list.add(item)
+
+                        }
+                        //Toast.makeText(this, list.size.toString(), Toast.LENGTH_LONG).show()
+
+                        fillAdapter(list)
+                    }
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            },
+            object : Response.ErrorListener {
+                override fun onErrorResponse(error: VolleyError?) {
+                    //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
+                }
+            }) {
+            @Throws(AuthFailureError::class)
+            override fun getParams(): Map<String, String>? {
+                var params : HashMap<String, String> = HashMap<String, String>()
+                params.put("recipe_id", recipeId!!)
+                params.put("user_id", user_id!!)
+                return params
+            }
+        }
+        var requestQueue = Volley.newRequestQueue(this)
+        requestQueue.add(stringRequest)
+
     }
     /*
     private fun getSwapMg() : ItemTouchHelper {
@@ -122,4 +198,5 @@ class AddIngredActivity : AppCompatActivity() {
         })
     }
     */
+
 }

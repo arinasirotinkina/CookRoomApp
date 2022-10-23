@@ -7,10 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cookroom.EditProductActivity
 import com.example.cookroom.R
-import com.example.cookroom.db.products.ProdDbManager
 import com.example.cookroom.db.products.ProdIntentConstants
 import com.example.cookroom.models.ProdItem
 
@@ -28,10 +28,11 @@ class ItemProductAdapter(listMain: ArrayList<ProdItem>, contextM: Context): Recy
             tvAmount.text = item.amount.toString()
             tvMeasure.text = item.measure
             itemView.setOnClickListener{
+                //Toast.makeText(context, item.amount.toString(), Toast.LENGTH_LONG).show()
                 val intent = Intent(context, EditProductActivity::class.java).apply {
                     putExtra(ProdIntentConstants.I_TITLE_KEY, item.title)
                     putExtra(ProdIntentConstants.I_CATEGORY_KEY, item.category)
-                    putExtra(ProdIntentConstants.I_AMOUNT_KEY, item.amount)
+                    putExtra(ProdIntentConstants.I_AMOUNT_KEY, item.amount.toString())
                     putExtra(ProdIntentConstants.I_MEASURE_KEY, item.measure)
                     putExtra(ProdIntentConstants.I_ID_KEY, item.id)
                 }
@@ -57,10 +58,11 @@ class ItemProductAdapter(listMain: ArrayList<ProdItem>, contextM: Context): Recy
         listArray.addAll(listItems)
         notifyDataSetChanged()
     }
+    /*
     fun removeItem(pos: Int, dbManager: ProdDbManager) {
         dbManager.removeItemFromDb(listArray[pos].id.toString())
         listArray.removeAt(pos)
         notifyItemRangeChanged(0, listArray.size)
         notifyItemRemoved(pos)
-    }
+    }*/
 }

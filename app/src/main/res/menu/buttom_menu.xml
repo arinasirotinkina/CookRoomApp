@@ -18,5 +18,11 @@
         android:title="Покупки"
         android:orderInCategory="3"
         />
+    <item
+        android:id="@+id/userFragment"
+        android:icon="@drawable/ic_baseline_shopping_cart_24"
+        android:title="Моя страница"
+        android:orderInCategory="4"
+        />
 
 </menu>

@@ -1,6 +1,7 @@
 package com.example.cookroom
 
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,13 +10,25 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Switch
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.AuthFailureError
+import com.android.volley.Response
+import com.android.volley.VolleyError
+import com.android.volley.toolbox.AsyncHttpStack
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.example.cookroom.adapters.ItemProductAdapter
 import com.example.cookroom.adapters.RecipeAdapter
 import com.example.cookroom.db.recipes.RecipeDbManager
+import com.example.cookroom.models.ProdItem
+import com.example.cookroom.models.RecipeItem
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-
+import org.json.JSONException
+import org.json.JSONObject
 
 
 class RecipesFragment : Fragment() {
@@ -43,13 +56,16 @@ class RecipesFragment : Fragment() {
             var i = Intent(requireContext(), EditRecipeActivity::class.java)
             startActivity(i)
         }
+        init()
+        //initSearchView()
+        readRecipes()
         return view
     }
     override fun onStart() {
         super.onStart()
         init()
-        initSearchView()
-        fillAdapter()
+        //initSearchView()
+        readRecipes()
     }
     fun init() {
         val myAdapter = RecipeAdapter(ArrayList(), requireContext())
@@ -73,10 +89,10 @@ class RecipesFragment : Fragment() {
             }
         })
     }
-    fun fillAdapter() {
+    fun fillAdapter(list: ArrayList<RecipeItem>) {
         val myDbManager = RecipeDbManager(requireContext())
         myDbManager.openDb()
-        val list = myDbManager.readDbData("")
+        //val list = myDbManager.readDbData("")
         val myAdapter = RecipeAdapter(ArrayList(), requireContext())
         myAdapter.updateAdapter(list)
         rcView?.adapter = myAdapter
@@ -104,7 +120,62 @@ class RecipesFragment : Fragment() {
             }
         })
     }
+    fun readRecipes() {
+        val URL_READ1 = "http://arinasyw.beget.tech/recipes_readall.php"
+        //val list = myDbManager.readDbData("", prodCategory!!)
+        var pref = requireActivity().getSharedPreferences("User_Id", AppCompatActivity.MODE_PRIVATE)
+        var user_id = pref.getString("user_id", "-1")
+
+        //Toast.makeText(requireContext(), user_id, Toast.LENGTH_LONG).show()
+        //val list = productsDbManager.readDbData(this, prodCategory!!, user_id.toString())
 
 
+        val stringRequest = object : StringRequest(
+            Method.POST, URL_READ1,
+            Response.Listener<String> { response ->
+                try {
+                    val jsonObject = JSONObject(response.toString())
+                    val success = jsonObject.getString("success")
+                    val jsonArray = jsonObject.getJSONArray("recipe")
+                    val list = java.util.ArrayList<RecipeItem>()
+                    //Toast.makeText(context,  success.toString(), Toast.LENGTH_LONG).show()
+                    if (success.equals("1")) {
+                        //Toast.makeText(context, jsonArray.length().toString(), Toast.LENGTH_LONG).show()
+                        for (i in 0 until jsonArray.length()) {
+                            val obj = jsonArray.getJSONObject(i)
+                            val id = obj.getString("id").trim()
+                            var title = obj.getString("title").trim()
+                            var description = obj.getString("description").trim()
+                            //Toast.makeText(context, title, Toast.LENGTH_LONG).show()
+                            var item = RecipeItem()
+                            item.title = title
+                            item.description = description
+                            item.id = id.toInt()
+                            list.add(item)
+                        }
+                    }
+                    fillAdapter(list)
+                    //Toast.makeText(context, list.size.toString(), Toast.LENGTH_LONG).show()
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            },
+            object : Response.ErrorListener {
+                override fun onErrorResponse(error: VolleyError?) {
+                    //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
+                }
+            }) {
+            @Throws(AuthFailureError::class)
+            override fun getParams(): Map<String, String>? {
+                var params : HashMap<String, String> = HashMap<String, String>()
+                params.put("user_id", user_id!!)
+                return params
+            }
+        }
+        //Toast.makeText(context, dataList.size.toString(), Toast.LENGTH_LONG).show()
+
+        var requestQueue = Volley.newRequestQueue(requireContext())
+        requestQueue.add(stringRequest)
+    }
 
 }
