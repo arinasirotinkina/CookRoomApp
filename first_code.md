@@ -1,4 +1,4 @@
-# https://github.com/arinasirotinkina/cookroom
+# Код в ветке cookroom
 
 #1. Создан проект
 
