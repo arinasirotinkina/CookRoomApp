@@ -13,10 +13,8 @@ import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.cookroom.adapters.ItemProductAdapter
-import com.example.cookroom.db.depending.DepDbManager
 import com.example.cookroom.db.depending.DepenDbManager
 import com.example.cookroom.db.products.ProductsDbManager
-import com.example.cookroom.db.recipes.RecipeDbManager
 import com.example.cookroom.db.recipes.RecipeIntentConstants
 import com.example.cookroom.db.recipes.RecipesDbManager
 import com.example.cookroom.models.ProdItem
@@ -24,7 +22,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class EditRecipeActivity : AppCompatActivity() {
-    val myDbManager = RecipeDbManager(this)
+    //val myDbManager = RecipeDbManager(this)
     val recipesDbManager = RecipesDbManager()
     var id = 0
     var isEditState = false
@@ -62,7 +60,7 @@ class EditRecipeActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        myDbManager.closeDb()
+        //myDbManager.closeDb()
     }
 
     fun getMyIntents() {

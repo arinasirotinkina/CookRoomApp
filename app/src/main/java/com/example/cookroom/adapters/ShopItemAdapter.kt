@@ -8,7 +8,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cookroom.R
-import com.example.cookroom.db.products.ProdDbManager
 import com.example.cookroom.models.ProdItem
 
 class ShopItemAdapter(listMain: ArrayList<ProdItem>, contextM: Context): RecyclerView.Adapter<ShopItemAdapter.MyHolder>() {
@@ -47,10 +46,10 @@ class ShopItemAdapter(listMain: ArrayList<ProdItem>, contextM: Context): Recycle
         listArray.addAll(listItems)
         notifyDataSetChanged()
     }
-    fun removeItem(pos: Int, dbManager: ProdDbManager) {
+    /*fun removeItem(pos: Int, dbManager: ProdDbManager) {
         dbManager.removeItemFromDb(listArray[pos].id.toString())
         listArray.removeAt(pos)
         notifyItemRangeChanged(0, listArray.size)
         notifyItemRemoved(pos)
-    }
+    }*/
 }

@@ -1,7 +1,6 @@
 package com.example.cookroom
 
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,13 +17,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.VolleyError
-import com.android.volley.toolbox.AsyncHttpStack
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.cookroom.adapters.ItemProductAdapter
 import com.example.cookroom.adapters.RecipeAdapter
-import com.example.cookroom.db.recipes.RecipeDbManager
-import com.example.cookroom.models.ProdItem
 import com.example.cookroom.models.RecipeItem
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONException
@@ -70,12 +65,13 @@ class RecipesFragment : Fragment() {
     fun init() {
         val myAdapter = RecipeAdapter(ArrayList(), requireContext())
         rcView?.layoutManager = LinearLayoutManager(requireContext())
-        val swapHelper = getSwapMg()
-        swapHelper.attachToRecyclerView(rcView)
+        //val swapHelper = getSwapMg()
+        //swapHelper.attachToRecyclerView(rcView)
         rcView?.adapter = myAdapter
     }
+    /*
     private fun initSearchView() {
-        val myDbManager = RecipeDbManager(requireContext())
+        //val myDbManager = RecipeDbManager(requireContext())
         val myAdapter = RecipeAdapter(ArrayList(), requireContext())
         searchView?.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(p0: String?): Boolean {
@@ -88,10 +84,10 @@ class RecipesFragment : Fragment() {
                 return true
             }
         })
-    }
+    }*/
     fun fillAdapter(list: ArrayList<RecipeItem>) {
-        val myDbManager = RecipeDbManager(requireContext())
-        myDbManager.openDb()
+        //val myDbManager = RecipeDbManager(requireContext())
+        //myDbManager.openDb()
         //val list = myDbManager.readDbData("")
         val myAdapter = RecipeAdapter(ArrayList(), requireContext())
         myAdapter.updateAdapter(list)
@@ -102,8 +98,9 @@ class RecipesFragment : Fragment() {
             tvNoElem?.visibility = View.VISIBLE
         }
     }
+    /*
     private fun getSwapMg() : ItemTouchHelper {
-        val myDbManager = RecipeDbManager(requireContext())
+        //val myDbManager = RecipeDbManager(requireContext())
         val myAdapter = RecipeAdapter(ArrayList(), requireContext())
         return ItemTouchHelper(object: ItemTouchHelper.
         SimpleCallback(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT){
@@ -119,7 +116,7 @@ class RecipesFragment : Fragment() {
                 myAdapter.removeItem(viewHolder.adapterPosition, myDbManager)
             }
         })
-    }
+    }*/
     fun readRecipes() {
         val URL_READ1 = "http://arinasyw.beget.tech/recipes_readall.php"
         //val list = myDbManager.readDbData("", prodCategory!!)

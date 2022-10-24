@@ -20,7 +20,6 @@ import com.android.volley.toolbox.Volley
 import com.example.cookroom.adapters.RecipeAdapter
 import com.example.cookroom.models.ProdItem
 import com.example.cookroom.adapters.ShopItemAdapter
-import com.example.cookroom.db.recipes.RecipeDbManager
 import com.example.cookroom.models.RecipeItem
 import org.json.JSONException
 import org.json.JSONObject
@@ -61,8 +60,8 @@ class ShoplistFragment : Fragment() {
         rcView?.adapter = myAdapter
     }
     fun fillAdapter(list: ArrayList<RecipeItem>) {
-        val myDbManager = RecipeDbManager(requireContext())
-        myDbManager.openDb()
+        //val myDbManager = RecipeDbManager(requireContext())
+        //myDbManager.openDb()
         //val list = myDbManager.readDbData("")
         val myAdapter = RecipeAdapter(ArrayList(), requireContext())
         myAdapter.updateAdapter(list)
