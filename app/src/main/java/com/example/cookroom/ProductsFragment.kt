@@ -8,15 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.GridView
-import android.widget.Toast
-import com.example.cookroom.adapters.ProductAdapter
+import com.example.cookroom.adapters.CategoryAdapter
 import com.example.cookroom.models.CategoryItem
 
 
 class ProductsFragment : Fragment(), AdapterView.OnItemClickListener {
     private var arrayList:ArrayList<CategoryItem>? = null
     private var gridView:GridView? = null
-    private var productAdapter: ProductAdapter? = null
+    private var productAdapter: CategoryAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -35,7 +34,7 @@ class ProductsFragment : Fragment(), AdapterView.OnItemClickListener {
         gridView = view?.findViewById(R.id.my_grid_view_list)
         arrayList = ArrayList()
         arrayList = setDataList()
-        productAdapter = ProductAdapter(requireContext(), arrayList!!)
+        productAdapter = CategoryAdapter(requireContext(), arrayList!!)
         gridView?.adapter = productAdapter
         gridView?.onItemClickListener = this
 
@@ -43,15 +42,18 @@ class ProductsFragment : Fragment(), AdapterView.OnItemClickListener {
 
     private fun setDataList(): ArrayList<CategoryItem> {
         var arrayList:ArrayList<CategoryItem> = ArrayList()
-        arrayList.add(CategoryItem(R.drawable.cicon, "Хлебобулочные"))
-        arrayList.add(CategoryItem(R.drawable.cicon, "Мясные продукты"))
-        arrayList.add(CategoryItem(R.drawable.cicon, "Крупы"))
-        arrayList.add(CategoryItem(R.drawable.cicon, "Рыбные продукты"))
-        arrayList.add(CategoryItem(R.drawable.cicon, "Кондитерские изделия"))
-        arrayList.add(CategoryItem(R.drawable.cicon, "Молочные продукты"))
-        arrayList.add(CategoryItem(R.drawable.cicon, "Специи"))
-        arrayList.add(CategoryItem(R.drawable.cicon, "Крупы2"))
-        arrayList.add(CategoryItem(R.drawable.cicon, "Другое"))
+        arrayList.add(CategoryItem(R.drawable.apple, "Фрукты"))
+        arrayList.add(CategoryItem(R.drawable.cabbage, "Овощи"))
+        arrayList.add(CategoryItem(R.drawable.milk, "Кисломолочные продукты"))
+        arrayList.add(CategoryItem(R.drawable.porridge, "Крупы"))
+        arrayList.add(CategoryItem(R.drawable.meat, "Мясо"))
+        arrayList.add(CategoryItem(R.drawable.fish, "Рыба"))
+        arrayList.add(CategoryItem(R.drawable.bread, "Хлеб"))
+        arrayList.add(CategoryItem(R.drawable.cookies, "Кондитерские изделия"))
+        arrayList.add(CategoryItem(R.drawable.salt, "Специи"))
+        arrayList.add(CategoryItem(R.drawable.can, "Консервы"))
+        arrayList.add(CategoryItem(R.drawable.water, "Напитки"))
+        arrayList.add(CategoryItem(R.drawable.other, "Другое"))
         return arrayList
     }
 

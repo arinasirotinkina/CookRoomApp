@@ -9,7 +9,7 @@ import android.widget.TextView
 import com.example.cookroom.R
 import com.example.cookroom.models.CategoryItem
 
-class ProductAdapter(var context: Context, var arrayList: ArrayList<CategoryItem>): BaseAdapter() {
+class CategoryAdapter(var context: Context, var arrayList: ArrayList<CategoryItem>): BaseAdapter() {
     override fun getCount(): Int {
         return arrayList.size
     }
@@ -20,10 +20,10 @@ class ProductAdapter(var context: Context, var arrayList: ArrayList<CategoryItem
         return position.toLong()
     }
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        var view: View = View.inflate(context, R.layout.card_view_item_grid, null)
-        var icons : ImageView = view.findViewById(R.id.icons)
-        var names: TextView= view.findViewById(R.id.name_text_view)
-        var listItem :CategoryItem = arrayList.get(position)
+        val view: View = View.inflate(context, R.layout.card_view_item_grid, null)
+        val icons : ImageView = view.findViewById(R.id.icons)
+        val names: TextView= view.findViewById(R.id.name_text_view)
+        val listItem :CategoryItem = arrayList.get(position)
         icons.setImageResource(listItem.icons !!)
         names.text = listItem.name
         return view
