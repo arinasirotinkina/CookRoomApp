@@ -56,15 +56,7 @@ class EditProductActivity : AppCompatActivity() {
         finish()
     }
 
-    override fun onResume() {
-        super.onResume()
-        //myDbManager.openDb()
 
-    }
-    override fun onDestroy() {
-        super.onDestroy()
-        //myDbManager.closeDb()
-    }
     fun getMyIntents() {
         val i = intent
         if (i != null) {
