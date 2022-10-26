@@ -1,29 +1,30 @@
-package com.example.cookroom.db.products
+package com.example.cookroom.db.shop
 
+
+import android.content.ClipDescription
 import android.content.Context
+import android.content.Intent
 import android.widget.Toast
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.cookroom.MainActivity
 import com.example.cookroom.adapters.ItemProductAdapter
 import com.example.cookroom.models.ProdItem
 
 import org.json.JSONException
 import org.json.JSONObject
 
-class ProductsDbManager {
-
-    var URL_INSERT = "https://cookroom.site/products_insert.php"
-    var URL_READ = "https://cookroom.site/products_readall.php"
-    val URL_UPDATE = "https://cookroom.site/products_update.php"
-    val URL_SELECT = "https://cookroom.site/products_select.php"
-    var selectList = ArrayList<String>()
-    var prod : String = ""
-
-    fun insertToDb(context: Context, title: String, category: String, amount: String, measure: String, user_id: String) {
-        var stringRequest = object : StringRequest(
+class ShopDbManager {
+    var URL_INSERT = "http://arinasyw.beget.tech/"
+    var URL_READ = "http://arinasyw.beget.tech/"
+    val URL_UPDATE = "http://arinasyw.beget.tech/"
+    val URL_SEARCH = "http://arinasyw.beget.tech/"
+    //var id: String = ""
+    fun insertToDb(context: Context, title: String, description: String, user_id: String) {
+        val stringRequest = object : StringRequest(
             Method.POST, URL_INSERT,
             Response.Listener<String> { response ->
                 try {
@@ -42,9 +43,7 @@ class ProductsDbManager {
             override fun getParams(): Map<String, String>? {
                 var params : HashMap<String, String> = HashMap<String, String>()
                 params.put("title", title)
-                params.put("category",category)
-                params.put("amount", amount)
-                params.put("measure", measure)
+                params.put("description", description)
                 params.put("user_id", user_id)
                 return params
             }
@@ -53,13 +52,13 @@ class ProductsDbManager {
         requestQueue.add(stringRequest)
 
     }
-    fun updateToDB(context: Context, title: String, category: String, amount: String, measure: String, user_id: String, id: String) {
+    fun updateToDB(context: Context, title: String, description: String, user_id: String, id: String) {
         var stringRequest = object : StringRequest(
             Method.POST, URL_UPDATE,
             Response.Listener<String> { response ->
                 try {
                     val obj = JSONObject(response.toString())
-                    Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show()
+                    //Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show()
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
@@ -73,10 +72,8 @@ class ProductsDbManager {
             override fun getParams(): Map<String, String>? {
                 var params : HashMap<String, String> = HashMap<String, String>()
                 params.put("title", title)
-                params.put("category",category)
-                params.put("amount", amount)
-                params.put("measure", measure)
-                params.put("user_id", user_id)
+                params.put("description", description)
+                //params.put("user_id", user_id)
                 params.put("id", id)
                 return params
             }
@@ -85,23 +82,22 @@ class ProductsDbManager {
         requestQueue.add(stringRequest)
 
     }
-    fun selector(context: Context, user_id: String, selList: ArrayList<String>) : ArrayList<String> {
+    suspend fun searchForId(context: Context, myTitle: String, myDesc: String, user_id: String, selList: ArrayList<String>) {
         fun setId(ids: String) {
             selList.add(ids)
+            Toast.makeText(context, selList.size.toString(), Toast.LENGTH_LONG).show()
         }
-        var stringRequest = object : StringRequest(
-            Method.POST, URL_SELECT,
+        val stringRequest = object : StringRequest(
+            Method.POST, URL_SEARCH,
             Response.Listener<String> { response ->
                 try {
                     val jsonObject = JSONObject(response.toString())
                     val success = jsonObject.getString("success")
-                    val jsonArray = jsonObject.getJSONArray("product")
+                    val jsonArray = jsonObject.getJSONArray("recipe")
                     if (success.equals("1")) {
-                        for (i in 0 until jsonArray.length()) {
-                            var obj = jsonArray.getJSONObject(i)
-                            var ids = obj.getString("title").trim()
-                            setId(ids)
-                        }
+                        val obj = jsonArray.getJSONObject(0)
+                        var ids = obj.getString("id").trim()
+                        //ids??
                     }
                 } catch (e: JSONException) {
                     e.printStackTrace()
@@ -116,13 +112,16 @@ class ProductsDbManager {
             override fun getParams(): Map<String, String>? {
                 var params : HashMap<String, String> = HashMap<String, String>()
                 params.put("user_id", user_id)
+                params.put("title", myTitle)
+                params.put("description", myDesc)
                 return params
             }
         }
-        //Toast.makeText(context, prod, Toast.LENGTH_LONG).show()
+        Toast.makeText(context, selList.size.toString(), Toast.LENGTH_LONG).show()
         var requestQueue = Volley.newRequestQueue(context)
         requestQueue.add(stringRequest)
-        return selList
+        //return selList
+
     }
 
 /*

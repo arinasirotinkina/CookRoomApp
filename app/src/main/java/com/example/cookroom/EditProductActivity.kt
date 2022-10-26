@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.*
 import com.example.cookroom.db.products.ProdIntentConstants
 import com.example.cookroom.db.products.ProductsDbManager
+import com.example.cookroom.db.shop.ShopDbManager
 
 class EditProductActivity : AppCompatActivity() {
 
@@ -18,6 +19,7 @@ class EditProductActivity : AppCompatActivity() {
     val measureVals = listOf<String>("кг", "г", "л", "мл")
     val productsDbManager = ProductsDbManager()
     var sessionManager= SessionManager(this)
+    var shopDbManager = ShopDbManager()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_product)
@@ -43,12 +45,21 @@ class EditProductActivity : AppCompatActivity() {
         if (myTitle != "" && myMeasure != "") {
             if (isEditState) {
                 prodCategory = intentProd!!.getStringExtra(ProdIntentConstants.I_CATEGORY_KEY)
-                //Toast.makeText(this, id.toString(), Toast.LENGTH_LONG).show()
-                //myDbManager.updateItem(myTitle, myCategory, myAmount, myMeasure, id)
+
+
+
+
+
+
+
+
+
                 productsDbManager.updateToDB(this, myTitle, prodCategory.toString(), myAmount1, myMeasure, user_id.toString(), id.toString())
 
             } else {
-                //myDbManager.insertToDb(myTitle, myCategory, myAmount, myMeasure)
+                if (myAmount.toInt() == 0) {
+                    //shopDbManager.insertToDb()
+                }
                 productsDbManager.insertToDb(this, myTitle, myCategory, myAmount1,myMeasure, user_id!!)
             }
             finish()

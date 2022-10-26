@@ -89,7 +89,7 @@ class EditRecipeActivity : AppCompatActivity() {
                 isEditState = true
             }
         }
-        val URL_SEARCH = "http://arinasyw.beget.tech/recipes_getid.php"
+        val URL_SEARCH = "https://cookroom.site/recipes_getid.php"
         var stringRequest = object : StringRequest(
             Method.POST, URL_SEARCH,
             Response.Listener<String> { response ->
@@ -176,7 +176,7 @@ class EditRecipeActivity : AppCompatActivity() {
                     }
                 }
 
-                val URL_SELECT = "http://arinasyw.beget.tech/products_select.php"
+                val URL_SELECT = "https://cookroom.site/products_select.php"
                 var stringRequest = object : StringRequest(
                     Method.POST, URL_SELECT,
                     Response.Listener<String> { response ->
@@ -238,7 +238,7 @@ class EditRecipeActivity : AppCompatActivity() {
                 requestQueue.add(stringRequest)
 
             }
-            val URL_READ = "http://arinasyw.beget.tech/depending_readall.php"
+            val URL_READ = "https://cookroom.site/depending_readall.php"
             val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
             val user_id = pref.getString("user_id", "-1")
             val stringRequest = object : StringRequest(
@@ -288,7 +288,7 @@ class EditRecipeActivity : AppCompatActivity() {
 
         }
 
-        val URL_SEARCH = "http://arinasyw.beget.tech/recipes_getid.php"
+        val URL_SEARCH = "https://cookroom.site/recipes_getid.php"
         var stringRequest = object : StringRequest(
             Method.POST, URL_SEARCH,
             Response.Listener<String> { response ->

@@ -17,10 +17,10 @@ import org.json.JSONObject
 
 class DepenDbManager {
 
-    var URL_INSERT = "http://arinasyw.beget.tech/depending_insert.php"
-    var URL_READ = "http://arinasyw.beget.tech/depending_readall.php"
-    val URL_UPDATE = "http://arinasyw.beget.tech/products_update.php"
-    val URL_SELECT = "http://arinasyw.beget.tech/products_select.php"
+    var URL_INSERT = "https://cookroom.site/depending_insert.php"
+    var URL_READ = "https://cookroom.site/depending_readall.php"
+    val URL_UPDATE = "https://cookroom.site/products_update.php"
+    val URL_SELECT = "https://cookroom.site/products_select.php"
     var selectList = ArrayList<String>()
     var prod : String = ""
 

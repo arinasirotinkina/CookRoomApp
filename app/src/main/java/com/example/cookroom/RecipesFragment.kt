@@ -118,7 +118,7 @@ class RecipesFragment : Fragment() {
         })
     }*/
     fun readRecipes() {
-        val URL_READ1 = "http://arinasyw.beget.tech/recipes_readall.php"
+        val URL_READ1 = "https://cookroom.site/recipes_readall.php"
         //val list = myDbManager.readDbData("", prodCategory!!)
         var pref = requireActivity().getSharedPreferences("User_Id", AppCompatActivity.MODE_PRIVATE)
         var user_id = pref.getString("user_id", "-1")

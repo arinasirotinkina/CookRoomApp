@@ -22,7 +22,7 @@ class RegistrationActivity : AppCompatActivity() {
     var passwordConfirm : EditText? = null
     var registerButton : Button? = null
     companion object  {
-        var URL_REGIST = "http://arinasyw.beget.tech/register.php"
+        var URL_REGIST = "https://cookroom.site/register.php"
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

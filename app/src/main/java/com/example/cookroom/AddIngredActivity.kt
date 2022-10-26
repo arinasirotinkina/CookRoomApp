@@ -126,7 +126,7 @@ class AddIngredActivity : AppCompatActivity() {
         myAdapter.updateAdapter(ingredList)
     }
     fun readDbData() {
-        val URL_READ = "http://arinasyw.beget.tech/depending_readall.php"
+        val URL_READ = "https://cookroom.site/depending_readall.php"
         val kt = intent
         var recipeId = kt.getStringExtra("CHOSEN")
         var pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)

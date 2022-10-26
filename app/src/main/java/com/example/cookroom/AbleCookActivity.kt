@@ -31,7 +31,7 @@ class AbleCookActivity : AppCompatActivity() {
     fun onClickAccept(view: View) {
         val kt = intent
         val minus_list = kt.getParcelableArrayListExtra<ProdItem>("minus_list")
-        val URL_SELECT = "http://arinasyw.beget.tech/products_select.php"
+        val URL_SELECT = "https://cookroom.site/products_select.php"
         val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
         val user_id = pref.getString("user_id", "-1")
         var stringRequest = object : StringRequest(

@@ -124,7 +124,7 @@ class ProductListActivity : AppCompatActivity() {
         })
     }*/
     fun readDbData() {
-        val URL_READ = "http://arinasyw.beget.tech/products_readall.php"
+        val URL_READ = "https://cookroom.site/products_readall.php"
         val kt = intent
         prodCategory = kt.getCharSequenceExtra("CHOSEN").toString()
         //val list = myDbManager.readDbData("", prodCategory!!)

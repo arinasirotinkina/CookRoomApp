@@ -17,10 +17,10 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class RecipesDbManager {
-    var URL_INSERT = "http://arinasyw.beget.tech/recipes_insert.php"
-    var URL_READ = "http://arinasyw.beget.tech/products_readall.php"
-    val URL_UPDATE = "http://arinasyw.beget.tech/recipes_update.php"
-    val URL_SEARCH = "http://arinasyw.beget.tech/recipes_getid.php"
+    var URL_INSERT = "https://cookroom.site/recipes_insert.php"
+    var URL_READ = "https://cookroom.site/products_readall.php"
+    val URL_UPDATE = "https://cookroom.site/recipes_update.php"
+    val URL_SEARCH = "https://cookroom.site/recipes_getid.php"
     //var id: String = ""
     fun insertToDb(context: Context, title: String, description: String, user_id: String) {
         val stringRequest = object : StringRequest(

@@ -23,7 +23,7 @@ class LoginActivity : AppCompatActivity() {
     var reglink : TextView? = null
     var sessionManager = SessionManager(this)
     companion object  {
-        var URL_LOGIN = "http://arinasyw.beget.tech/login.php"
+        var URL_LOGIN = "https://cookroom.site/login.php"
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
