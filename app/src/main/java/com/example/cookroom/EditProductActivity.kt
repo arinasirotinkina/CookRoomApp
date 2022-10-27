@@ -58,7 +58,7 @@ class EditProductActivity : AppCompatActivity() {
 
             } else {
                 if (myAmount.toInt() == 0) {
-                    //shopDbManager.insertToDb()
+                    shopDbManager.insertToDb(this, myTitle, myAmount1, myMeasure, user_id!!)
                 }
                 productsDbManager.insertToDb(this, myTitle, myCategory, myAmount1,myMeasure, user_id!!)
             }
