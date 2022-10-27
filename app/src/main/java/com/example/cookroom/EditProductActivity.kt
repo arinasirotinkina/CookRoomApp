@@ -45,15 +45,11 @@ class EditProductActivity : AppCompatActivity() {
         if (myTitle != "" && myMeasure != "") {
             if (isEditState) {
                 prodCategory = intentProd!!.getStringExtra(ProdIntentConstants.I_CATEGORY_KEY)
-
-
-
-
-
-
-
-
-
+                if (myAmount.toInt() == 0) {
+                    //shopDbManager.deleteFromDb(this, myTitle, user_id!!)
+                } else {
+                    shopDbManager.deleteFromDb(this, myTitle, user_id!!)
+                }
                 productsDbManager.updateToDB(this, myTitle, prodCategory.toString(), myAmount1, myMeasure, user_id.toString(), id.toString())
 
             } else {
