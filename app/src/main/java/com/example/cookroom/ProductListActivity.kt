@@ -162,7 +162,7 @@ class ProductListActivity : AppCompatActivity() {
                             var item = ProdItem()
                             item.title = title
                             item.category = category
-                            item.amount = amount.toInt()
+                            item.amount = amount.toDouble()
                             item.measure = measure
                             item.id = id.toInt()
                             list.add(item)

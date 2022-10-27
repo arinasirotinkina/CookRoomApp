@@ -147,7 +147,7 @@ class AddIngredActivity : AppCompatActivity() {
                             var measure = obj.getString("measure").trim()
                             var item = ProdItem()
                             item.title = title
-                            item.amount = amount.toInt()
+                            item.amount = amount.toDouble()
                             item.measure = measure
                             item.id = 0
                             item.category = ""

@@ -7,14 +7,14 @@ class ProdItem() : Parcelable{
     var id : Int? = 0
     var title : String? = null
     var category :String? = null
-    var amount :Int? = null
+    var amount :Double? = null
     var measure: String? = null
 
     constructor(parcel: Parcel) : this() {
         id = parcel.readValue(Int::class.java.classLoader) as? Int
         title = parcel.readString()
         category = parcel.readString()
-        amount = parcel.readValue(Int::class.java.classLoader) as? Int
+        amount = parcel.readValue(Int::class.java.classLoader) as? Double
         measure = parcel.readString()
     }
 

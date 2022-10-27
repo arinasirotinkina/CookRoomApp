@@ -197,7 +197,7 @@ class EditRecipeActivity : AppCompatActivity() {
                                     var item = ProdItem()
                                     item.title = title
                                     item.category = category
-                                    item.amount = amount.toInt()
+                                    item.amount = amount.toDouble()
                                     item.measure = measure
                                     item.id = id.toInt()
                                     list1.add(item)
@@ -258,7 +258,7 @@ class EditRecipeActivity : AppCompatActivity() {
                                 val id = obj.getString("product_id").trim()
                                 val item = ProdItem()
                                 item.title = title
-                                item.amount = amount.toInt()
+                                item.amount = amount.toDouble()
                                 item.measure = measure
                                 item.id =  id.toInt()
                                 item.category = ""

@@ -17,6 +17,7 @@ import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.cookroom.adapters.ItemProductAdapter
 import com.example.cookroom.adapters.RecipeAdapter
 import com.example.cookroom.models.ProdItem
 import com.example.cookroom.adapters.ShopItemAdapter
@@ -59,11 +60,11 @@ class ShoplistFragment : Fragment() {
         //swapHelper.attachToRecyclerView(rcView)
         rcView?.adapter = myAdapter
     }
-    fun fillAdapter(list: ArrayList<RecipeItem>) {
+    fun fillAdapter(list: ArrayList<ProdItem>) {
         //val myDbManager = RecipeDbManager(requireContext())
         //myDbManager.openDb()
         //val list = myDbManager.readDbData("")
-        val myAdapter = RecipeAdapter(ArrayList(), requireContext())
+        val myAdapter = ItemProductAdapter(ArrayList(), requireContext())
         myAdapter.updateAdapter(list)
         rcView?.adapter = myAdapter
         if (list.size > 0) {
@@ -73,7 +74,7 @@ class ShoplistFragment : Fragment() {
         }
     }
     fun readRecipes() {
-        val URL_READ1 = "https://cookroom.site/recipes_readall.php"
+        val URL_READ1 = "https://cookroom.site/shop_readall.php"
         //val list = myDbManager.readDbData("", prodCategory!!)
         var pref = requireActivity().getSharedPreferences("User_Id", AppCompatActivity.MODE_PRIVATE)
         var user_id = pref.getString("user_id", "-1")
@@ -88,21 +89,24 @@ class ShoplistFragment : Fragment() {
                 try {
                     val jsonObject = JSONObject(response.toString())
                     val success = jsonObject.getString("success")
-                    val jsonArray = jsonObject.getJSONArray("recipe")
-                    val list = java.util.ArrayList<RecipeItem>()
-                    //Toast.makeText(context,  success.toString(), Toast.LENGTH_LONG).show()
+                    val jsonArray = jsonObject.getJSONArray("shop")
+                    val list = java.util.ArrayList<ProdItem>()
+                    Toast.makeText(context,  success.toString(), Toast.LENGTH_LONG).show()
                     if (success.equals("1")) {
                         //Toast.makeText(context, jsonArray.length().toString(), Toast.LENGTH_LONG).show()
                         for (i in 0 until jsonArray.length()) {
                             val obj = jsonArray.getJSONObject(i)
                             val id = obj.getString("id").trim()
                             var title = obj.getString("title").trim()
-                            var description = obj.getString("description").trim()
+                            var amount = obj.getString("amount").trim()
+                            var measure = obj.getString("measure").trim()
                             //Toast.makeText(context, title, Toast.LENGTH_LONG).show()
-                            var item = RecipeItem()
-                            item.title = title
-                            item.description = description
+                            var item = ProdItem()
                             item.id = id.toInt()
+                            item.title = title
+                            item.category = ""
+                            item.amount = amount.toDouble()
+                            item.measure = measure
                             list.add(item)
                         }
                     }
