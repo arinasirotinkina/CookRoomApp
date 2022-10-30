@@ -25,14 +25,19 @@ class ItemProductAdapter(listMain: ArrayList<ProdItem>, contextM: Context): Recy
 
         fun setData(item: ProdItem) {
             tvTitle.text = item.title
-            tvAmount.text = item.amount.toString()
+            var amountCeil = item.amount.toString()
+            if (item.amount!! % 1.0 == 0.0) {
+                amountCeil = item.amount!!.toInt().toString()
+                //Toast.makeText(context, amountCeil, Toast.LENGTH_SHORT).show()
+            }
+            tvAmount.text = amountCeil
             tvMeasure.text = item.measure
             itemView.setOnClickListener{
                 //Toast.makeText(context, item.amount.toString(), Toast.LENGTH_LONG).show()
                 val intent = Intent(context, EditProductActivity::class.java).apply {
                     putExtra(ProdIntentConstants.I_TITLE_KEY, item.title)
                     putExtra(ProdIntentConstants.I_CATEGORY_KEY, item.category)
-                    putExtra(ProdIntentConstants.I_AMOUNT_KEY, item.amount.toString())
+                    putExtra(ProdIntentConstants.I_AMOUNT_KEY, amountCeil)
                     putExtra(ProdIntentConstants.I_MEASURE_KEY, item.measure)
                     putExtra(ProdIntentConstants.I_ID_KEY, item.id)
                 }

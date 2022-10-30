@@ -37,7 +37,7 @@ class EditProductActivity : AppCompatActivity() {
         val myTitle = edTitle?.text.toString()
         val myCategory = prodCategory.toString()
         val myAmount1 = edAmount?.text.toString()
-        val myAmount = myAmount1.toInt()
+        //val myAmount = myAmount1.toInt()
         val myMeasure = edMeasure?.selectedItem.toString()
 
         var pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
@@ -45,7 +45,7 @@ class EditProductActivity : AppCompatActivity() {
         if (myTitle != "" && myMeasure != "") {
             if (isEditState) {
                 prodCategory = intentProd!!.getStringExtra(ProdIntentConstants.I_CATEGORY_KEY)
-                if (myAmount.toInt() == 0) {
+                if (myAmount1 == "0") {
                     //shopDbManager.deleteFromDb(this, myTitle, user_id!!)
                 } else {
                     shopDbManager.deleteFromDb(this, myTitle, user_id!!)
@@ -53,7 +53,7 @@ class EditProductActivity : AppCompatActivity() {
                 productsDbManager.updateToDB(this, myTitle, prodCategory.toString(), myAmount1, myMeasure, user_id.toString(), id.toString())
 
             } else {
-                if (myAmount.toInt() == 0) {
+                if (myAmount1 == "0") {
                     shopDbManager.insertToDb(this, myTitle, myAmount1, myMeasure, user_id!!)
                 }
                 productsDbManager.insertToDb(this, myTitle, myCategory, myAmount1,myMeasure, user_id!!)

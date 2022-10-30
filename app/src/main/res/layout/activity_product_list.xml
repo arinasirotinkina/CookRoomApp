@@ -26,7 +26,6 @@
         android:layout_marginBottom="36dp"
         android:clickable="true"
         android:onClick="onClickNew"
-        app:backgroundTint="@color/purple_500"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_add" />
