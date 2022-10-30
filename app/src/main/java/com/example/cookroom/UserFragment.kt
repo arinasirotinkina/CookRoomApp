@@ -26,6 +26,8 @@ class UserFragment : Fragment() {
     var logout : Button? = null
     var timePicker : TimePicker? = null
     var notifOnOff : SwitchCompat? = null
+    var saveTime : Button? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -40,6 +42,7 @@ class UserFragment : Fragment() {
         notifOnOff = view.findViewById(R.id.notif)
         email = view?.findViewById(R.id.email)
         logout = view?.findViewById(R.id.logout)
+        saveTime = view?.findViewById(R.id.saveTime)
 
         timePicker?.setIs24HourView(true)
 
@@ -60,12 +63,23 @@ class UserFragment : Fragment() {
         notifOnOff?.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked){
                 timePicker?.visibility = View.VISIBLE
+                saveTime?.visibility = View.VISIBLE
             }else{
                 timePicker?.visibility = View.GONE
+                saveTime?.visibility = View.GONE
             }
+        }
+        saveTime?.setOnClickListener{
+            var calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, timePicker!!.getHour());
+            calendar.set(Calendar.MINUTE, timePicker!!.getMinute());
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            Toast.makeText(requireActivity(), calendar.toString(), Toast.LENGTH_LONG).show()
         }
         return view
     }
+
 
 
 

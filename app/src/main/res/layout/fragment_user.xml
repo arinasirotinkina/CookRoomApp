@@ -62,8 +62,8 @@
 
     <TimePicker
         android:id="@+id/timePicker"
-        android:layout_width="303dp"
-        android:layout_height="330dp"
+        android:layout_width="328dp"
+        android:layout_height="210dp"
         android:layout_marginTop="16dp"
         android:amPmBackgroundColor="@color/white"
         android:numbersSelectorColor="@android:color/holo_green_dark"
@@ -74,6 +74,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/notif"
         tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/saveTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Установить время"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timePicker"
+        app:layout_constraintVertical_bias="0.264" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
