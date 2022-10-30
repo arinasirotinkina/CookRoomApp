@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.*
 import com.example.cookroom.db.products.ProdIntentConstants
 import com.example.cookroom.db.products.ProductsDbManager
-import com.example.cookroom.db.shop.ShopDbManager
+import com.example.cookroom.db.ShopDbManager
 
 class EditProductActivity : AppCompatActivity() {
 

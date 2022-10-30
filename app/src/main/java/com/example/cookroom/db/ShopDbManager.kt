@@ -1,4 +1,4 @@
-package com.example.cookroom.db.shop
+package com.example.cookroom.db
 
 
 import android.content.ClipDescription
