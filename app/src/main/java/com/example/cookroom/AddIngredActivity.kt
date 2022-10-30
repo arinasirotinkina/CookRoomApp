@@ -1,12 +1,9 @@
 package com.example.cookroom
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.AuthFailureError
@@ -15,8 +12,7 @@ import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.cookroom.adapters.IngredAdapter
-import com.example.cookroom.adapters.ItemProductAdapter
-import com.example.cookroom.db.depending.DepenDbManager
+import com.example.cookroom.db.DepenDbManager
 import com.example.cookroom.db.products.ProductsDbManager
 import com.example.cookroom.models.ProdItem
 import org.json.JSONException

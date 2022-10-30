@@ -12,9 +12,6 @@ import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.cookroom.adapters.ItemProductAdapter
-import com.example.cookroom.db.depending.DepenDbManager
-import com.example.cookroom.db.products.ProductsDbManager
 import com.example.cookroom.db.recipes.RecipeIntentConstants
 import com.example.cookroom.db.recipes.RecipesDbManager
 import com.example.cookroom.models.ProdItem

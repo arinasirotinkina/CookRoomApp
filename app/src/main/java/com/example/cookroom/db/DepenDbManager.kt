@@ -1,15 +1,13 @@
-package com.example.cookroom.db.depending
+package com.example.cookroom.db
 
 
 import android.content.Context
 import android.widget.Toast
-import androidx.lifecycle.MutableLiveData
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.cookroom.adapters.ItemProductAdapter
 import com.example.cookroom.models.ProdItem
 
 import org.json.JSONException
