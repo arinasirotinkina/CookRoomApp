@@ -35,7 +35,6 @@ class ProductListActivity : AppCompatActivity() {
     var prodCategory: String? = null
     var productsDbManager = ProductsDbManager()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_list)
@@ -43,20 +42,16 @@ class ProductListActivity : AppCompatActivity() {
 
         rcView = findViewById(R.id.rcView)
         tvNoElem = findViewById(R.id.tvNoElem)
-        searchView = findViewById(R.id.searchView)
 
         val kt = intent
         prodCategory = kt.getCharSequenceExtra("CHOSEN").toString()
         init()
         //initSearchView()
 
-
     }
 
     override fun onResume() {
         super.onResume()
-        //myDbManager.openDb()
-        //fillAdapter()
         readDbData()
     }
 
@@ -66,31 +61,12 @@ class ProductListActivity : AppCompatActivity() {
         startActivity(i)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        //myDbManager.closeDb()
-    }
     fun init() {
         rcView?.layoutManager = LinearLayoutManager(this)
         //val swapHelper = getSwapMg()
         //swapHelper.attachToRecyclerView(rcView)
         rcView?.adapter = myAdapter
     }
-    /*private fun initSearchView() {
-        val kt = intent
-        prodCategory = kt.getCharSequenceExtra("CHOSEN").toString()
-        searchView?.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(p0: String?): Boolean {
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                val list = myDbManager.readDbData(newText!!, prodCategory!!)
-                myAdapter.updateAdapter(list)
-                return true
-            }
-        })
-    }*/
     fun fillAdapter(list: ArrayList<ProdItem>) {
         val kt = intent
         prodCategory = kt.getCharSequenceExtra("CHOSEN").toString()
@@ -131,26 +107,15 @@ class ProductListActivity : AppCompatActivity() {
         var pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
         var user_id = pref.getString("user_id", "-1")
 
-        //Toast.makeText(this, prodCategory, Toast.LENGTH_LONG).show()
-        //val list = productsDbManager.readDbData(this, prodCategory!!, user_id.toString())
-
-
         var stringRequest = object : StringRequest(
             Method.POST, URL_READ,
             Response.Listener<String> { response ->
-
                 try {
-                    var dataList = ArrayList<ProdItem>()
-
-                    var prodAdapter = ItemProductAdapter(ArrayList(), this)
                     val jsonObject = JSONObject(response.toString())
                     val success = jsonObject.getString("success")
                     val jsonArray = jsonObject.getJSONArray("product")
                     val list = ArrayList<ProdItem>()
-                    //Toast.makeText(context,  success.toString(), Toast.LENGTH_LONG).show()
-
                     if (success.equals("1")) {
-                        //Toast.makeText(context, jsonArray.length().toString(), Toast.LENGTH_LONG).show()
                         for (i in 0 until jsonArray.length()) {
                             val obj = jsonArray.getJSONObject(i)
                             val id = obj.getString("id").trim()
@@ -166,12 +131,9 @@ class ProductListActivity : AppCompatActivity() {
                             item.measure = measure
                             item.id = id.toInt()
                             list.add(item)
-
-
                         }
                     }
                     fillAdapter(list)
-                    //Toast.makeText(context, list.size.toString(), Toast.LENGTH_LONG).show()
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
@@ -189,7 +151,6 @@ class ProductListActivity : AppCompatActivity() {
                 return params
             }
         }
-        //Toast.makeText(context, dataList.size.toString(), Toast.LENGTH_LONG).show()
 
         var requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)

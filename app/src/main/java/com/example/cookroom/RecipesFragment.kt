@@ -45,7 +45,7 @@ class RecipesFragment : Fragment() {
         var view = inflater.inflate(R.layout.fragment_recipes, container, false)
         rcView = view.findViewById(R.id.rcView)
         tvNoElem = view.findViewById(R.id.tvNoElem)
-        searchView = view.findViewById(R.id.searchView)
+        //searchView = view.findViewById(R.id.searchView)
         var fbNew = view.findViewById<FloatingActionButton>(R.id.fbNew)
         fbNew.setOnClickListener{
             var i = Intent(requireContext(), EditRecipeActivity::class.java)

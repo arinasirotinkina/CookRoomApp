@@ -17,9 +17,14 @@ class RecipeAdapter(listMain: ArrayList<RecipeItem>, contextM: Context): Recycle
     var context = contextM
     class MyHolder(itemView: View, contextV: Context) : RecyclerView.ViewHolder(itemView) {
         val tvTitle = itemView.findViewById<TextView>(R.id.tvTitle)
+        val tvDesc = itemView.findViewById<TextView>(R.id.tvDesc)
         val context = contextV
         fun setData(item: RecipeItem) {
             tvTitle.text = item.title
+            tvDesc.text = item.description
+            if (item.description!!.length > 200){
+                tvDesc.text = item.description.toString().substring(0, 200)
+            }
             itemView.setOnClickListener{
                 val intent = Intent(context, EditRecipeActivity::class.java).apply {
                     putExtra(RecipeIntentConstants.I_TITLE_KEY, item.title)

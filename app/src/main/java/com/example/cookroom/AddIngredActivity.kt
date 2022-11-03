@@ -86,6 +86,7 @@ class AddIngredActivity : AppCompatActivity() {
 
                         }
                         readDbData()
+                        readDbData()
                     }
                 } catch (e: JSONException) {
                     e.printStackTrace()
