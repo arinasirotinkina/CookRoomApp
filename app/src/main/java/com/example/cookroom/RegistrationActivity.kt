@@ -1,22 +1,20 @@
 package com.example.cookroom
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instance
+import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.AuthFailureError
-import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONException
 import org.json.JSONObject
-import kotlin.jvm.Throws
 
 class RegistrationActivity : AppCompatActivity() {
     var email : EditText? = null
@@ -40,14 +38,24 @@ class RegistrationActivity : AppCompatActivity() {
             finish()
         }
         registerButton?.setOnClickListener{
-            Regist()
+            if (isEmailValid(email!!.text) and (password!!.text.toString() == passwordConfirm!!.text.toString())) {
+                register()
+            } else if (!isEmailValid(email!!.text)){
+                Toast.makeText(this, "Неверный email-адрес", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "Пароли не совпадают", Toast.LENGTH_LONG).show()
+            }
         }
     }
-    fun Regist() {
-        var userEmail = this.email?.text.toString().trim()
-        var userPassword = this.password?.text.toString().trim()
+    private fun isEmailValid(email: CharSequence?): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email!!)
+            .matches()
+    }
+    private fun register() {
+        val userEmail = this.email?.text.toString().trim()
+        val userPassword = this.password?.text.toString().trim()
 
-        var stringRequest = object : StringRequest(
+        val stringRequest = object : StringRequest(
             Method.POST, URL_REGIST,
             Response.Listener<String> { response ->
                 try {
@@ -66,14 +74,14 @@ class RegistrationActivity : AppCompatActivity() {
 
             @Throws (AuthFailureError::class)
                 override fun getParams(): Map<String, String>? {
-                    var params : HashMap<String, String> = HashMap<String, String>()
-                    params.put("email", userEmail)
-                    params.put("password", userPassword)
+                    val params : HashMap<String, String> = HashMap<String, String>()
+                    params["email"] = userEmail
+                    params["password"] = userPassword
                     return params
 
                 }
         }
-        var requestQueue = Volley.newRequestQueue(this)
+        val requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
     }
 }
