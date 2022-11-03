@@ -3,6 +3,7 @@ package com.example.cookroom
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.widget.Toast
 
 class SessionManager(context: Context) {
     var sharedPreferences : SharedPreferences? = null
@@ -58,5 +59,22 @@ class SessionManager(context: Context) {
         (context as MainActivity).finish()
         context!!.startActivity(i)
         notificationManager.cancelAlarm(context!!)
+    }
+    fun updateSession(context: Context, id: String, email: String, time: String?){
+        editor?.clear()
+        editor?.commit()
+        notificationManager.cancelAlarm(context)
+        sharedPreferences = context.getSharedPreferences("LOGIN", PRIVATE_MOD)
+        editor = sharedPreferences?.edit()
+        editor?.putBoolean(LOGIN, true)
+        editor?.putString(EMAIL, email)
+        editor?.putString(ID, id)
+        editor?.putString(TIME, time)
+        editor?.apply()
+        if (time != null){
+            notificationManager.createNotificationChannel(context)
+            notificationManager.setAlarm(context, time)
+            Toast.makeText(context, "fvef", Toast.LENGTH_LONG).show()
+        }
     }
 }

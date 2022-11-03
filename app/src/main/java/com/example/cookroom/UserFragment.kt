@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat.getSystemService
+import com.example.cookroom.db.UserDbManager
 import org.w3c.dom.Text
 import java.util.*
 import kotlin.collections.HashMap
@@ -27,6 +28,7 @@ class UserFragment : Fragment() {
     var timePicker : TimePicker? = null
     var notifOnOff : SwitchCompat? = null
     var saveTime : Button? = null
+    var userDbManager = UserDbManager()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,23 +70,33 @@ class UserFragment : Fragment() {
         }
 
         notifOnOff?.setOnCheckedChangeListener { buttonView, isChecked ->
+            val sessionManager = SessionManager(requireContext())
             if(isChecked){
                 timePicker?.visibility = View.VISIBLE
                 saveTime?.visibility = View.VISIBLE
+                userDbManager.turnOnAlarm(requireContext(), user_id!!, "18:00:00")
+                timePicker?.hour = 18
+                timePicker?.minute = 0
+                sessionManager.updateSession(requireContext(), user_id, mEmail!!, "18:00:00")
             }else{
                 timePicker?.visibility = View.GONE
                 saveTime?.visibility = View.GONE
+                userDbManager.turnOffAlarm(requireContext(), user_id!!)
+                sessionManager.updateSession(requireContext(), user_id, mEmail!!, null)
             }
         }
 
 
         saveTime?.setOnClickListener{
+            var time_picked = "${timePicker!!.hour}:${timePicker!!.minute}:00"
+            sessionManager.updateSession(requireContext(), user_id!!, mEmail!!, time_picked)
+            userDbManager.turnOnAlarm(requireContext(), user_id, time_picked)
             var calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY, timePicker!!.getHour());
             calendar.set(Calendar.MINUTE, timePicker!!.getMinute());
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
-            Toast.makeText(requireActivity(), calendar.toString(), Toast.LENGTH_LONG).show()
+            //Toast.makeText(requireActivity(), calendar.toString(), Toast.LENGTH_LONG).show()
         }
         return view
     }

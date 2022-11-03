@@ -30,6 +30,7 @@ class NotificationManager() {
             var notificationManager = context.getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel);
 
+
         }
     }
     fun cancelAlarm(context: Context) {
@@ -41,6 +42,10 @@ class NotificationManager() {
             alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager?
         }
         alarmManager?.cancel(pendingIntent)
+        var notificationManager = context.getSystemService(NotificationManager::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationManager.deleteNotificationChannel("cookroom")
+        }
         Toast.makeText(context, "Alarm Cancelled", Toast.LENGTH_SHORT).show()
     }
     fun setAlarm(context: Context, time:String) {
