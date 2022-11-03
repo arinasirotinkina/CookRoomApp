@@ -1,9 +1,11 @@
 package com.example.cookroom
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instance
 import com.android.volley.AuthFailureError
@@ -21,9 +23,9 @@ class RegistrationActivity : AppCompatActivity() {
     var password : EditText? = null
     var passwordConfirm : EditText? = null
     var registerButton : Button? = null
-    companion object  {
-        var URL_REGIST = "https://cookroom.site/register.php"
-    }
+    var alreadyHaveAcc : TextView? = null
+    var URL_REGIST = "https://cookroom.site/register.php"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
@@ -31,8 +33,13 @@ class RegistrationActivity : AppCompatActivity() {
         password = findViewById(R.id.password)
         passwordConfirm = findViewById(R.id.passwordConfirm)
         registerButton = findViewById(R.id.registerButton)
-        registerButton?.setOnClickListener() {
-            //Toast.makeText(this, "uu", Toast.LENGTH_LONG).show()
+        alreadyHaveAcc = findViewById(R.id.alreadyHaveAcc)
+        alreadyHaveAcc?.setOnClickListener{
+            val i = Intent(this, LoginActivity::class.java)
+            startActivity(i)
+            finish()
+        }
+        registerButton?.setOnClickListener{
             Regist()
         }
     }
