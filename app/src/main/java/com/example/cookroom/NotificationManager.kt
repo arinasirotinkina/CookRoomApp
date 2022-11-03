@@ -21,10 +21,10 @@ class NotificationManager() {
     fun createNotificationChannel(context: Context) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            var name = "foxandroidReminderChannel";
-            var description = "Channel For Alarm Manager";
+            var name = "CookRoom";
+            var description = "Cooooooooooook";
             var importance = NotificationManager.IMPORTANCE_HIGH;
-            var channel = NotificationChannel("cookroom", name, importance);
+            var channel = NotificationChannel("CookRoom", name, importance);
             channel.setDescription(description);
 
             var notificationManager = context.getSystemService(NotificationManager::class.java)
@@ -44,7 +44,7 @@ class NotificationManager() {
         alarmManager?.cancel(pendingIntent)
         var notificationManager = context.getSystemService(NotificationManager::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationManager.deleteNotificationChannel("cookroom")
+            notificationManager.deleteNotificationChannel("CookRoom")
         }
         Toast.makeText(context, "Alarm Cancelled", Toast.LENGTH_SHORT).show()
     }
@@ -67,23 +67,8 @@ class NotificationManager() {
                 Toast.makeText(context, "Alarm set Successfully", Toast.LENGTH_SHORT).show()
 
             }
-            /*
-            var calendar = Calendar.getInstance()
-            calendar.time = Date.from(dateTime!!.atStartOfDay(ZoneId.systemDefault()).toInstant())
-            calendar.set(Calendar.HOUR_OF_DAY, 10);
-            calendar.set(Calendar.MINUTE,35);
-            calendar.set(Calendar.SECOND,0);
-            calendar.set(Calendar.MILLISECOND,0);
-            var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager?
-            val intent = Intent(context, AlarmReceiver::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
-            alarmManager?.setRepeating(
-                AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pendingIntent
-            )*/
-        }
 
-        //Toast.makeText(context, "Alarm set Successfully", Toast.LENGTH_SHORT).show()
+        }
     }
 
 }

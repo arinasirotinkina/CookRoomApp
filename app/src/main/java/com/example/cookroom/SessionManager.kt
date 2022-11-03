@@ -74,7 +74,7 @@ class SessionManager(context: Context) {
         if (time != null){
             notificationManager.createNotificationChannel(context)
             notificationManager.setAlarm(context, time)
-            Toast.makeText(context, "fvef", Toast.LENGTH_LONG).show()
+            //Toast.makeText(context, "fvef", Toast.LENGTH_LONG).show()
         }
     }
 }

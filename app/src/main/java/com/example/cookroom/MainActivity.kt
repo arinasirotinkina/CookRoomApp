@@ -33,25 +33,12 @@ class MainActivity : AppCompatActivity() {
             setOf(R.id.productsFragment, R.id.recipesFragment, R.id.shoplistFragment))
         /*setupActionBarWithNavController(navController, appBarConfiguration)*/
         bottomNavigationView.setupWithNavController(navController)
-        createNotificationChannel()
+
         //setAlarm()
     }
 
 
-    private fun createNotificationChannel() {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            var name = "foxandroidReminderChannel";
-            var description = "Channel For Alarm Manager";
-            var importance = NotificationManager.IMPORTANCE_HIGH;
-            var channel = NotificationChannel("cookroom", name, importance);
-            channel.setDescription(description);
-
-            var notificationManager = getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(channel);
-
-        }
-    }
     /*
     private fun setAlarm() {
         var calendar = Calendar.getInstance();

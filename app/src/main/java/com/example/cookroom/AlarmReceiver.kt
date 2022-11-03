@@ -15,10 +15,10 @@ class AlarmReceiver : BroadcastReceiver() {
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         val pendingIntent = PendingIntent.getActivity(context, 0, i, 0)
 
-        var builder = NotificationCompat.Builder(context, "cookroom")
+        var builder = NotificationCompat.Builder(context, "CookRoom")
             .setSmallIcon(R.drawable.ic_launcher_background)
-            .setContentTitle("Foxandroid Alarm Manager")
-            .setContentText("Subscribe for android related content")
+            .setContentTitle("CookRoom")
+            .setContentText("Cooooooooooooooooook")
             .setAutoCancel(true)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
