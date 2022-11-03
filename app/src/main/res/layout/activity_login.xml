@@ -5,17 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
-
+    <TextView
+        android:id="@+id/tvText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="68dp"
+        android:text="Вход"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <EditText
         android:id="@+id/email"
         android:layout_width="280dp"
         android:layout_height="50dp"
-        android:layout_marginTop="132dp"
+        android:layout_marginTop="172dp"
         android:ems="10"
         android:hint="email"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,7 +36,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="32dp"
         android:ems="10"
-        android:hint="password"
+        android:hint="пароль"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
@@ -34,25 +45,27 @@
 
     <Button
         android:id="@+id/loginButton"
-        android:layout_width="210dp"
-        android:layout_height="47dp"
+        android:layout_width="242dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="34dp"
         android:clickable="true"
-        android:text="login"
+        android:text="Войти"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        app:layout_constraintTop_toBottomOf="@+id/password"
+        app:layout_constraintVertical_bias="0.514" />
 
     <TextView
-        android:id="@+id/reglink"
+        android:id="@+id/notHaveAcc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Registration"
-        android:clickable="true"
+        android:text="Ещё нет аккаунта? Зарегистрироваться"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loginButton"
-        android:focusable="true" />
+        app:layout_constraintVertical_bias="0.313" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
