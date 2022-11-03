@@ -16,7 +16,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val pendingIntent = PendingIntent.getActivity(context, 0, i, 0)
 
         var builder = NotificationCompat.Builder(context, "CookRoom")
-            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setSmallIcon(R.drawable.apple)
             .setContentTitle("CookRoom")
             .setContentText("Cooooooooooooooooook")
             .setAutoCancel(true)
