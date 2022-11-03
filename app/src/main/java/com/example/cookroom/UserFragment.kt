@@ -28,11 +28,6 @@ class UserFragment : Fragment() {
     var notifOnOff : SwitchCompat? = null
     var saveTime : Button? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,6 +47,7 @@ class UserFragment : Fragment() {
         val user : HashMap<String, String> = sessionManager.getUserDetails()
         val mEmail = user.get(sessionManager.EMAIL)
         val user_id = user.get(sessionManager.ID)
+        val time = user.get(sessionManager.TIME)
 
         val sharedPreferences = requireContext().getSharedPreferences("User_Id", Context.MODE_PRIVATE)
         sharedPreferences.edit().putString("user_id", user_id).apply()
@@ -60,6 +56,17 @@ class UserFragment : Fragment() {
         logout?.setOnClickListener {
             sessionManager.logout()
         }
+
+        if (time != "null") {
+            notifOnOff?.isChecked = true
+            timePicker?.visibility = View.VISIBLE
+            saveTime?.visibility = View.VISIBLE
+            val times = time!!.split(":").toTypedArray()
+            timePicker?.hour = times[0].toInt()
+            timePicker?.minute = times[1].toInt()
+
+        }
+
         notifOnOff?.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked){
                 timePicker?.visibility = View.VISIBLE
@@ -69,6 +76,8 @@ class UserFragment : Fragment() {
                 saveTime?.visibility = View.GONE
             }
         }
+
+
         saveTime?.setOnClickListener{
             var calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY, timePicker!!.getHour());
@@ -79,7 +88,6 @@ class UserFragment : Fragment() {
         }
         return view
     }
-
 
 
 

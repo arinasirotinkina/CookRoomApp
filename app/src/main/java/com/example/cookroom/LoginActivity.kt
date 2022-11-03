@@ -60,8 +60,9 @@ class LoginActivity : AppCompatActivity() {
                             var obj = jsonArray.getJSONObject(i)
                             var email = obj.getString("email").trim()
                             var id = obj.getString("id").trim()
-                            sessionManager.createSession(email, id)
-
+                            val time = obj.getString("time").trim()
+                            sessionManager.createSession(this, email, id, time)
+                            //Toast.makeText(this, time, Toast.LENGTH_LONG).show()
                             val i = Intent(this, MainActivity::class.java)
                             i.putExtra("email", email)
                             startActivity(i)

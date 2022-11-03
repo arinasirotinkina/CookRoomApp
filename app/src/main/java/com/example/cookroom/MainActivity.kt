@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         /*setupActionBarWithNavController(navController, appBarConfiguration)*/
         bottomNavigationView.setupWithNavController(navController)
         createNotificationChannel()
-        setAlarm()
+        //setAlarm()
     }
 
 
@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
+    /*
     private fun setAlarm() {
         var calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 10);
@@ -67,6 +68,6 @@ class MainActivity : AppCompatActivity() {
         )
         Toast.makeText(this, "Alarm set Successfully", Toast.LENGTH_SHORT).show()
     }
-
+    */
 
 }
