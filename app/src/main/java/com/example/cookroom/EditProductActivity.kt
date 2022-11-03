@@ -16,7 +16,7 @@ class EditProductActivity : AppCompatActivity() {
     var edAmount : EditText? = null
     var edMeasure : Spinner? = null
     var prodCategory : String  =""
-    val measureVals = listOf<String>("кг", "г", "л", "мл")
+    val measureVals = listOf<String>("шт", "кг", "г", "л", "мл")
     val productsDbManager = ProductsDbManager()
     var sessionManager= SessionManager(this)
     var shopDbManager = ShopDbManager()

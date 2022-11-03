@@ -52,7 +52,6 @@ class AbleCookActivity : AppCompatActivity() {
 
                             for (ik in minus_list!!) {
                                 if (ik.id.toString() == id) {
-                                    //Toast.makeText(this, ik.amount.toString(), Toast.LENGTH_LONG).show()
                                     productsDbManager.updateToDB(this, ik.title!!, ik.category!!, ik.amount!!.toInt().toString(), ik.measure!!, user_id!!, ik.id.toString())
                                 }
                             }

@@ -19,7 +19,13 @@ class IngredAdapter(listMain: ArrayList<ProdItem>, contextM: Context): RecyclerV
         val context = contextV
         fun setData(item: ProdItem) {
             tvTitle.text = item.title
-            tvAmount.text = item.amount.toString()
+            var amountCeil = item.amount.toString()
+            if (item.amount!! % 1.0 == 0.0) {
+                amountCeil = item.amount!!.toInt().toString()
+                //Toast.makeText(context, amountCeil, Toast.LENGTH_SHORT).show()
+            }
+            tvAmount.text = amountCeil
+            tvTitle.text = item.title
             tvMeasure.text = item.measure
         }
     }
