@@ -1,5 +1,6 @@
 package com.example.cookroom
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,6 +19,7 @@ import com.android.volley.toolbox.Volley
 import com.example.cookroom.adapters.ItemProductAdapter
 import com.example.cookroom.adapters.RecipeAdapter
 import com.example.cookroom.adapters.ShopItemAdapter
+import com.example.cookroom.db.ShopDbManager
 import com.example.cookroom.models.ProdItem
 import org.json.JSONException
 import org.json.JSONObject
@@ -26,6 +28,7 @@ import org.json.JSONObject
 class ShoplistFragment : Fragment() {
     private var rcView: RecyclerView? = null
     var tvNoElem: TextView? = null
+    var shopDbManager= ShopDbManager()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,18 +49,37 @@ class ShoplistFragment : Fragment() {
     }
     fun init() {
         rcView?.layoutManager = LinearLayoutManager(requireContext())
-        //val swapHelper = getSwapMg()
-        //swapHelper.attachToRecyclerView(rcView)
+
     }
     fun fillAdapter(list: ArrayList<ProdItem>) {
         val myAdapter = ShopItemAdapter(ArrayList(), requireContext())
         myAdapter.updateAdapter(list)
+        val swapHelper = getSwapMg(myAdapter)
+        swapHelper.attachToRecyclerView(rcView)
         rcView?.adapter = myAdapter
         if (list.size > 0) {
             tvNoElem?.visibility = View.GONE
         } else {
             tvNoElem?.visibility = View.VISIBLE
         }
+    }
+    private fun getSwapMg(myAdapter: ShopItemAdapter) : ItemTouchHelper {
+        return ItemTouchHelper(object: ItemTouchHelper.
+        SimpleCallback(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT){
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val pref = requireActivity().getSharedPreferences("User_Id", AppCompatActivity.MODE_PRIVATE)
+                val user_id = pref.getString("user_id", "-1")
+                myAdapter.removeItem(viewHolder.adapterPosition, shopDbManager, user_id!!, requireContext())
+            }
+        })
     }
     fun readRecipes() {
         val URL_READ1 = "https://cookroom.site/shop_readall.php"

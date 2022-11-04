@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.widget.Toast
+import androidx.core.app.AlarmManagerCompat.setExact
 import java.sql.Time
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -54,8 +55,8 @@ class NotificationManager() {
                 val times = time.split(":").toTypedArray()
                 var calendar = Calendar.getInstance()
                 calendar.set(Calendar.HOUR_OF_DAY, times[0].toInt());
-                calendar.set(Calendar.MINUTE,times[0].toInt());
-                calendar.set(Calendar.SECOND,times[0].toInt());
+                calendar.set(Calendar.MINUTE,times[1].toInt());
+                calendar.set(Calendar.SECOND,times[2].toInt());
                 calendar.set(Calendar.MILLISECOND,0);
                 var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager?
                 val intent = Intent(context, AlarmReceiver::class.java)

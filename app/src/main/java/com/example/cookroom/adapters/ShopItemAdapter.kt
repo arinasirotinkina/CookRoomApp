@@ -3,6 +3,7 @@ package com.example.cookroom.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.icu.text.CaseMap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,8 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cookroom.EditProductActivity
 import com.example.cookroom.R
+import com.example.cookroom.db.DepenDbManager
+import com.example.cookroom.db.ShopDbManager
 import com.example.cookroom.db.products.ProdIntentConstants
 import com.example.cookroom.models.ProdItem
 
@@ -63,13 +66,14 @@ class ShopItemAdapter(listMain: ArrayList<ProdItem>, contextM: Context): Recycle
         listArray.addAll(listItems)
         notifyDataSetChanged()
     }
-    /*
-    fun removeItem(pos: Int, dbManager: ProdDbManager) {
-        dbManager.removeItemFromDb(listArray[pos].id.toString())
+    fun removeItem(pos: Int, dbManager: ShopDbManager, user_id: String, context: Context) {
+        var title = listArray[pos].title
+        Toast.makeText(context, title, Toast.LENGTH_LONG).show()
+        dbManager.deleteFromDb(context, user_id, title!!)
         listArray.removeAt(pos)
         notifyItemRangeChanged(0, listArray.size)
         notifyItemRemoved(pos)
-    }*/
+    }
 }
 
 
