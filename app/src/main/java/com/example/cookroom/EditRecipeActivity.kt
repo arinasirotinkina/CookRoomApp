@@ -19,7 +19,6 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class EditRecipeActivity : AppCompatActivity() {
-    //val myDbManager = RecipeDbManager(this)
     val recipesDbManager = RecipesDbManager()
     var id = 0
     var isEditState = false
@@ -30,13 +29,10 @@ class EditRecipeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_recipe)
-
         addIngred = findViewById(R.id.button)
         edTitle = findViewById(R.id.edTitle)
         edDesc = findViewById(R.id.edDesc)
         getMyIntents()
-
-
     }
 
     fun onClickSave(view: View) {
@@ -55,12 +51,7 @@ class EditRecipeActivity : AppCompatActivity() {
         finish()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        //myDbManager.closeDb()
-    }
-
-    fun getMyIntents() {
+    private fun getMyIntents() {
         val i = intent
         if (i != null) {
             if (i.getStringExtra(RecipeIntentConstants.I_TITLE_KEY) != null) {
@@ -71,7 +62,6 @@ class EditRecipeActivity : AppCompatActivity() {
             }
         }
     }
-
 
     fun onClickAdd(view: View) {
         val myTitle = edTitle?.text.toString()
@@ -87,7 +77,7 @@ class EditRecipeActivity : AppCompatActivity() {
             }
         }
         val URL_SEARCH = "https://cookroom.site/recipes_getid.php"
-        var stringRequest = object : StringRequest(
+        val stringRequest = object : StringRequest(
             Method.POST, URL_SEARCH,
             Response.Listener<String> { response ->
                 try {
@@ -95,22 +85,18 @@ class EditRecipeActivity : AppCompatActivity() {
                     val success = jsonObject.getString("success")
                     val jsonArray = jsonObject.getJSONArray("recipe")
                     if (success.equals("1")) {
-                        var obj = jsonArray.getJSONObject(0)
-                        var ids = obj.getString("id").trim()
-
+                        val obj = jsonArray.getJSONObject(0)
+                        val ids = obj.getString("id").trim()
                         val i = Intent(this, AddIngredActivity::class.java)
                         i.putExtra("CHOSEN", ids)
                         startActivity(i)
-
                     }
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
             },
-            object : Response.ErrorListener {
-                override fun onErrorResponse(error: VolleyError?) {
-                    //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
-                }
+            Response.ErrorListener {
+                //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
             }) {
             @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String>? {
@@ -123,36 +109,32 @@ class EditRecipeActivity : AppCompatActivity() {
         }
         var requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
-
-
     }
 
     fun onClickCook(view: View) {
         val myTitle = edTitle?.text.toString()
         val myDesc = edDesc?.text.toString()
-
         var pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
         var user_id = pref.getString("user_id", "-1")
         if (myTitle != "") {
             if (isEditState) {
-                //myDbManager.updateItem(myTitle, myDesc, id)
                 recipesDbManager.updateToDB(this, myTitle, myDesc, user_id!!, id.toString())
             } else {
-
                 recipesDbManager.insertToDb(this, myTitle, myDesc, user_id!!)
                 isEditState = true
             }
         }
         check(user_id!!, myTitle, myDesc)
-
     }
 
     fun check(user_id: String, myTitle: String, myDesc: String)  {
 
         fun setId(recipe_id: String) {
+
             fun checkList(list: ArrayList<ProdItem>, recipe_id : String) {
+
                 fun start(minus_list: ArrayList<ProdItem>, recipe_id: String) {
-                    Toast.makeText(this, minus_list.size.toString(), Toast.LENGTH_LONG).show()
+
                     var flag = true
                     for (item in minus_list) {
                         if (item.amount!! < 0) {
@@ -168,7 +150,6 @@ class EditRecipeActivity : AppCompatActivity() {
                     else {
                         val i = Intent(this, DisableCookActivity::class.java)
                         i.putExtra("minus_list", minus_list)
-
                         startActivity(i)
                     }
                 }
@@ -181,23 +162,16 @@ class EditRecipeActivity : AppCompatActivity() {
                             val jsonObject = JSONObject(response.toString())
                             val success = jsonObject.getString("success")
                             val jsonArray = jsonObject.getJSONArray("product")
-                            val list1 = java.util.ArrayList<ProdItem>()
                             val minus_list = ArrayList<ProdItem>()
                             if (success.equals("1")) {
                                 for (i in 0 until jsonArray.length()) {
                                     val obj = jsonArray.getJSONObject(i)
-                                    val id = obj.getString("id").trim()
-                                    var title = obj.getString("title").trim()
-                                    var category = obj.getString("category").trim()
-                                    var amount = obj.getString("amount").trim()
-                                    var measure = obj.getString("measure").trim()
-                                    var item = ProdItem()
-                                    item.title = title
-                                    item.category = category
-                                    item.amount = amount.toDouble()
-                                    item.measure = measure
-                                    item.id = id.toInt()
-                                    list1.add(item)
+                                    val item = ProdItem()
+                                    item.title = obj.getString("title").trim()
+                                    item.category = obj.getString("category").trim()
+                                    item.amount = obj.getString("amount").trim().toDouble()
+                                    item.measure = obj.getString("measure").trim()
+                                    item.id = obj.getString("id").trim().toInt()
                                     for (ik in list) {
                                         if (ik.id == item.id) {
                                             var temp = ProdItem()
@@ -207,11 +181,18 @@ class EditRecipeActivity : AppCompatActivity() {
                                             if (ik.measure == item.measure) {
                                                 temp.measure = item.measure
                                                 temp.amount = item.amount!! - ik.amount!!
+                                            } else if ((ik.measure == "г"  && item.measure == "кг")
+                                                || (ik.measure == "мл"  && item.measure == "л")) {
+                                                temp.measure = ik.measure
+                                                temp.amount = item.amount!! * 1000 - ik.amount!!
+                                            } else if ((ik.measure == "кг"  && item.measure == "г")
+                                                    || (ik.measure == "л"  && item.measure == "мл")) {
+                                                temp.measure = item.measure
+                                                temp.amount = item.amount!! - ik.amount!! * 1000
                                             }
                                             minus_list.add(temp)
                                         }
                                     }
-
                                 }
                                 start(minus_list, recipe_id)
                             }
@@ -219,10 +200,8 @@ class EditRecipeActivity : AppCompatActivity() {
                             e.printStackTrace()
                         }
                     },
-                    object : Response.ErrorListener {
-                        override fun onErrorResponse(error: VolleyError?) {
-                            //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
-                        }
+                    Response.ErrorListener {
+                        //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
                     }) {
                     @Throws(AuthFailureError::class)
                     override fun getParams(): Map<String, String>? {
@@ -235,6 +214,7 @@ class EditRecipeActivity : AppCompatActivity() {
                 requestQueue.add(stringRequest)
 
             }
+
             val URL_READ = "https://cookroom.site/depending_readall.php"
             val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
             val user_id = pref.getString("user_id", "-1")
@@ -249,15 +229,11 @@ class EditRecipeActivity : AppCompatActivity() {
                         if (success.equals("1")) {
                             for (i in 0 until jsonArray.length()) {
                                 val obj = jsonArray.getJSONObject(i)
-                                val title = obj.getString("title").trim()
-                                val amount = obj.getString("amount").trim()
-                                val measure = obj.getString("measure").trim()
-                                val id = obj.getString("product_id").trim()
                                 val item = ProdItem()
-                                item.title = title
-                                item.amount = amount.toDouble()
-                                item.measure = measure
-                                item.id =  id.toInt()
+                                item.title = obj.getString("title").trim()
+                                item.amount = obj.getString("amount").trim().toDouble()
+                                item.measure = obj.getString("measure").trim()
+                                item.id =  obj.getString("product_id").trim().toInt()
                                 item.category = ""
                                 list.add(item)
                             }
@@ -267,10 +243,8 @@ class EditRecipeActivity : AppCompatActivity() {
                         e.printStackTrace()
                     }
                 },
-                object : Response.ErrorListener {
-                    override fun onErrorResponse(error: VolleyError?) {
-                        //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
-                    }
+                Response.ErrorListener {
+                    //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
                 }) {
                 @Throws(AuthFailureError::class)
                 override fun getParams(): Map<String, String>? {
@@ -297,16 +271,13 @@ class EditRecipeActivity : AppCompatActivity() {
                         var obj = jsonArray.getJSONObject(0)
                         var ids = obj.getString("id").trim()
                         setId(ids)
-
                     }
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
             },
-            object : Response.ErrorListener {
-                override fun onErrorResponse(error: VolleyError?) {
-                    //Toast.makeText(this, error?.message.toString(), Toast.LENGTH_LONG).show()
-                }
+            Response.ErrorListener {
+                //Toast.makeText(this, error?.message.toString(), Toast.LENGTH_LONG).show()
             }) {
             @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String>? {
@@ -319,6 +290,5 @@ class EditRecipeActivity : AppCompatActivity() {
         }
         var requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
-
     }
 }
