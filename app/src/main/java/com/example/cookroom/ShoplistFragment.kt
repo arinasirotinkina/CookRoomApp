@@ -17,6 +17,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.cookroom.adapters.ItemProductAdapter
 import com.example.cookroom.adapters.RecipeAdapter
+import com.example.cookroom.adapters.ShopItemAdapter
 import com.example.cookroom.models.ProdItem
 import org.json.JSONException
 import org.json.JSONObject
@@ -44,14 +45,12 @@ class ShoplistFragment : Fragment() {
 
     }
     fun init() {
-        val myAdapter = RecipeAdapter(ArrayList(), requireContext())
         rcView?.layoutManager = LinearLayoutManager(requireContext())
         //val swapHelper = getSwapMg()
         //swapHelper.attachToRecyclerView(rcView)
-        rcView?.adapter = myAdapter
     }
     fun fillAdapter(list: ArrayList<ProdItem>) {
-        val myAdapter = ItemProductAdapter(ArrayList(), requireContext())
+        val myAdapter = ShopItemAdapter(ArrayList(), requireContext())
         myAdapter.updateAdapter(list)
         rcView?.adapter = myAdapter
         if (list.size > 0) {

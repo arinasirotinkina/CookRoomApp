@@ -2,6 +2,7 @@ package com.example.cookroom
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
 import android.view.View
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,14 +32,16 @@ class AddIngredActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_ingred)
+
         val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
         val user_id = pref.getString("user_id", "-1")
         addIngreds = findViewById(R.id.addButton)
         addTitle = findViewById(R.id.addTitle)
         addAmount = findViewById(R.id.addAmount)
         rcView = findViewById(R.id.rcView)
-        var selList = ArrayList<String>()
-        var selectList = productsDbManager.selector(this, user_id!!, selList)
+
+        val selList = ArrayList<String>()
+        val selectList = productsDbManager.selector(this, user_id!!, selList)
         val adapterSel = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, selectList)
         addTitle!!.threshold = 1
         addTitle!!.setAdapter(adapterSel)
@@ -53,18 +56,15 @@ class AddIngredActivity : AppCompatActivity() {
         init()
         readDbData()
     }
-
     override fun onStart() {
         super.onStart()
         readDbData()
     }
-
-
     fun AddIngred(view: View) {
         val kt = intent
         var recipeId = kt.getStringExtra("CHOSEN")
         var addMeasure = findViewById<Spinner>(R.id.chooseMeasure)
-        var amount1 = addAmount?.text.toString()
+        var amount = addAmount?.text.toString()
         val myMeasure = addMeasure?.selectedItem.toString()
         val title = addTitle!!.text.toString()
         val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
@@ -80,10 +80,11 @@ class AddIngredActivity : AppCompatActivity() {
                     val jsonArray = jsonObject.getJSONArray("product")
                     if (success.equals("1")) {
                         for (i in 0 until jsonArray.length()) {
-                            var obj = jsonArray.getJSONObject(i)
-                            var ids = obj.getString("id").trim()
-                            depenDbManager.insertToDb(this, recipeId!!, ids, title, amount1, myMeasure, user_id!!)
-
+                            val obj = jsonArray.getJSONObject(i)
+                            val ids = obj.getString("id").trim()
+                            addTitle?.setText("")
+                            addAmount?.setText("")
+                            depenDbManager.insertToDb(this, recipeId!!, ids, title, amount, myMeasure, user_id!!)
                         }
                         readDbData()
                         readDbData()
@@ -94,7 +95,7 @@ class AddIngredActivity : AppCompatActivity() {
             },
             object : Response.ErrorListener {
                 override fun onErrorResponse(error: VolleyError?) {
-                    //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@AddIngredActivity, error?.message, Toast.LENGTH_LONG).show()
                 }
             }) {
             @Throws(AuthFailureError::class)
@@ -107,10 +108,6 @@ class AddIngredActivity : AppCompatActivity() {
         }
         var requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
-
-
-
-
     }
     fun init() {
         rcView?.layoutManager = LinearLayoutManager(this)
@@ -118,7 +115,6 @@ class AddIngredActivity : AppCompatActivity() {
         //swapHelper.attachToRecyclerView(rcView)
         rcView?.adapter = myAdapter
     }
-
     fun fillAdapter(ingredList: ArrayList<ProdItem>) {
         myAdapter.updateAdapter(ingredList)
     }
@@ -148,12 +144,8 @@ class AddIngredActivity : AppCompatActivity() {
                             item.measure = measure
                             item.id = 0
                             item.category = ""
-
                             list.add(item)
-
                         }
-                        //Toast.makeText(this, list.size.toString(), Toast.LENGTH_LONG).show()
-
                         fillAdapter(list)
                     }
                 } catch (e: JSONException) {
@@ -162,7 +154,7 @@ class AddIngredActivity : AppCompatActivity() {
             },
             object : Response.ErrorListener {
                 override fun onErrorResponse(error: VolleyError?) {
-                    //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@AddIngredActivity, error?.message.toString(), Toast.LENGTH_LONG).show()
                 }
             }) {
             @Throws(AuthFailureError::class)

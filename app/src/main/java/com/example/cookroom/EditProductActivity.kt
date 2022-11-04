@@ -46,7 +46,7 @@ class EditProductActivity : AppCompatActivity() {
             if (isEditState) {
                 prodCategory = intentProd!!.getStringExtra(ProdIntentConstants.I_CATEGORY_KEY)
                 if (myAmount1 == "0") {
-                    //shopDbManager.deleteFromDb(this, myTitle, user_id!!)
+                    shopDbManager.insertToDb(this, myTitle, myAmount1, myMeasure, user_id!!)
                 } else {
                     shopDbManager.deleteFromDb(this, myTitle, user_id!!)
                 }
