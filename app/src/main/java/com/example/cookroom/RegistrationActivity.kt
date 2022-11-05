@@ -47,7 +47,7 @@ class RegistrationActivity : AppCompatActivity() {
             }
         }
     }
-    private fun isEmailValid(email: CharSequence?): Boolean {
+    fun isEmailValid(email: CharSequence?): Boolean {
         return Patterns.EMAIL_ADDRESS.matcher(email!!)
             .matches()
     }
@@ -60,7 +60,8 @@ class RegistrationActivity : AppCompatActivity() {
             Response.Listener { response ->
                 try {
                     val obj = JSONObject(response.toString())
-                    Toast.makeText(applicationContext, obj.getString("message"), Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, obj.getString("message"),
+                        Toast.LENGTH_LONG).show()
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }

@@ -47,13 +47,15 @@ class EditProductActivity : AppCompatActivity() {
                 } else {
                     shopDbManager.deleteFromDb(this, myTitle, user_id!!)
                 }
-                productsDbManager.updateToDB(this, myTitle, prodCategory.toString(), myAmount, myMeasure, user_id.toString(), id.toString())
+                productsDbManager.updateToDB(this, myTitle, prodCategory.toString(),
+                    myAmount, myMeasure, user_id.toString(), id.toString())
 
             } else {
                 if (myAmount == "0") {
                     shopDbManager.insertToDb(this, myTitle, myAmount, myMeasure, user_id!!)
                 }
-                productsDbManager.insertToDb(this, myTitle, myCategory, myAmount,myMeasure, user_id!!)
+                productsDbManager.insertToDb(this, myTitle, myCategory,
+                    myAmount,myMeasure, user_id!!)
             }
             finish()
         }
@@ -68,7 +70,8 @@ class EditProductActivity : AppCompatActivity() {
                 isEditState = true
                 edTitle?.setText(i.getStringExtra(ProdIntentConstants.I_TITLE_KEY))
                 edAmount?.setText(i.getStringExtra(ProdIntentConstants.I_AMOUNT_KEY))
-                edMeasure?.setSelection(measureVals.indexOf(i.getStringExtra(ProdIntentConstants.I_MEASURE_KEY)))
+                edMeasure?.setSelection(measureVals.indexOf(i.getStringExtra(
+                    ProdIntentConstants.I_MEASURE_KEY)))
                 prodCategory = i.getStringExtra(ProdIntentConstants.I_CATEGORY_KEY)!!
                 id = i.getIntExtra(ProdIntentConstants.I_ID_KEY, 0)
             }
