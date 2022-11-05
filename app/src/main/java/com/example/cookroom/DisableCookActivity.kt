@@ -1,12 +1,7 @@
 package com.example.cookroom
 
-import android.media.audiofx.PresetReverb
 import android.os.Bundle
-import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.ListView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,11 +16,12 @@ import com.example.cookroom.models.ProdItem
 import org.json.JSONException
 import org.json.JSONObject
 
-
+//Активность невозможности приготовления рецепта
 class DisableCookActivity : AppCompatActivity() {
     var not_h_list : RecyclerView? = null
     var addToShop : Button? = null
     var shopDbManager = ShopDbManager()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_disable_cook)
@@ -36,7 +32,7 @@ class DisableCookActivity : AppCompatActivity() {
         val minus_list = kt.getParcelableArrayListExtra<ProdItem>("minus_list")
         for (item in minus_list!!) {
             if (item.amount!!.toInt() < 0) {
-                var temp = ProdItem()
+                val temp = ProdItem()
                 temp.id = item.id
                 temp.title = item.title
                 temp.category = item.category
@@ -60,17 +56,13 @@ class DisableCookActivity : AppCompatActivity() {
                             if (success.equals("1")) {
                                 for (i in 0 until jsonArray.length()) {
                                     val obj = jsonArray.getJSONObject(i)
-                                    val id = obj.getString("id").trim()
-                                    var title = obj.getString("title").trim()
-                                    var amount = obj.getString("amount").trim()
-                                    var measure = obj.getString("measure").trim()
-                                    var ik = ProdItem()
-                                    var temp = ProdItem()
-                                    ik.id = id.toInt()
-                                    ik.title = title
+                                    val ik = ProdItem()
+                                    val temp = ProdItem()
+                                    ik.id = obj.getString("id").trim().toInt()
+                                    ik.title = obj.getString("title").trim()
                                     ik.category = ""
-                                    ik.amount = amount.toDouble()
-                                    ik.measure = measure
+                                    ik.amount = obj.getString("amount").trim().toDouble()
+                                    ik.measure = obj.getString("measure").trim()
                                     if (ik.measure == item.measure) {
                                         temp.measure = item.measure
                                         temp.amount = item.amount!! + ik.amount!!
@@ -83,12 +75,12 @@ class DisableCookActivity : AppCompatActivity() {
                                         temp.measure = item.measure
                                         temp.amount = item.amount!! + ik.amount!! * 1000
                                     }
-                                    shopDbManager.insertToDb(this, item.title!!, temp.amount.toString(), temp.measure!!, user_id!!)
-
+                                    shopDbManager.insertToDb(this, item.title!!,
+                                        temp.amount.toString(), temp.measure!!, user_id!!)
                                 }
-
                             } else {
-                                shopDbManager.insertToDb(this, item.title!!, item.amount.toString(), item.measure!!, user_id!!)
+                                shopDbManager.insertToDb(this, item.title!!,
+                                    item.amount.toString(), item.measure!!, user_id!!)
                             }
                         } catch (e: JSONException) {
                             e.printStackTrace()
@@ -100,21 +92,19 @@ class DisableCookActivity : AppCompatActivity() {
                         }
                     }) {
                     @Throws(AuthFailureError::class)
-                    override fun getParams(): Map<String, String>? {
-                        var params : HashMap<String, String> = HashMap<String, String>()
-                        params.put("user_id", user_id!!)
-                        params.put("title", item.title!!)
+                    override fun getParams(): Map<String, String> {
+                        val params : HashMap<String, String> = HashMap()
+                        params["user_id"] = user_id!!
+                        params["title"] = item.title!!
                         return params
                     }
                 }
-                var requestQueue = Volley.newRequestQueue(this)
+                val requestQueue = Volley.newRequestQueue(this)
                 requestQueue.add(stringRequest)
-
             }
         }
-        var adapter = NotHaveAdapter(d, this)
+        val adapter = NotHaveAdapter(d, this)
         not_h_list?.layoutManager = LinearLayoutManager(this)
         not_h_list!!.adapter = adapter
     }
-
 }

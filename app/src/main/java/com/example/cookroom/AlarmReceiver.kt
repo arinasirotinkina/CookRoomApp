@@ -7,18 +7,17 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
-
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, p1: Intent?) {
 
         var i = Intent(context, MainActivity::class.java)
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         val pendingIntent = PendingIntent.getActivity(context, 0, i, 0)
 
-        var builder = NotificationCompat.Builder(context, "CookRoom")
+        val builder = NotificationCompat.Builder(context, "CookRoom")
             .setSmallIcon(R.drawable.apple)
             .setContentTitle("CookRoom")
-            .setContentText("Cooooooooooooooooook")
+            .setContentText("Ваши продукты заканчиваются! Добавьте их в список покупок")
             .setAutoCancel(true)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setPriority(NotificationCompat.PRIORITY_HIGH)

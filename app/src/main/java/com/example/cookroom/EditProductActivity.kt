@@ -8,63 +8,60 @@ import com.example.cookroom.db.products.ProdIntentConstants
 import com.example.cookroom.db.products.ProductsDbManager
 import com.example.cookroom.db.ShopDbManager
 
+//Активность редактирования/добавления продукта
 class EditProductActivity : AppCompatActivity() {
-
     var id = 0
     var isEditState = false
     var edTitle : EditText? = null
     var edAmount : EditText? = null
     var edMeasure : Spinner? = null
-    var prodCategory : String  =""
-    val measureVals = listOf<String>("шт", "кг", "г", "л", "мл")
+    var prodCategory : String  = ""
+    val measureVals = listOf("шт", "кг", "г", "л", "мл")
     val productsDbManager = ProductsDbManager()
-    var sessionManager= SessionManager(this)
     var shopDbManager = ShopDbManager()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_product)
         edTitle = findViewById(R.id.edTitle)
         edAmount = findViewById(R.id.edAmount)
         edMeasure = findViewById(R.id.edMeasure)
-        sessionManager.sessionManage(this)
         getMyIntents()
     }
-
-
+    //Слушатель нажатий кнопки сохранения
     fun onClickSave(view: View) {
-        var intentProd = intent
+        val intentProd = intent
         var prodCategory = intentProd!!.getCharSequenceExtra("CHOSEN")
         val myTitle = edTitle?.text.toString()
         val myCategory = prodCategory.toString()
-        val myAmount1 = edAmount?.text.toString()
-        //val myAmount = myAmount1.toInt()
+        val myAmount = edAmount?.text.toString()
         val myMeasure = edMeasure?.selectedItem.toString()
+        val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
+        val user_id = pref.getString("user_id", "-1")
 
-        var pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
-        var user_id = pref.getString("user_id", "-1")
         if (myTitle != "" && myMeasure != "") {
             if (isEditState) {
-                prodCategory = intentProd!!.getStringExtra(ProdIntentConstants.I_CATEGORY_KEY)
-                if (myAmount1 == "0") {
-                    shopDbManager.insertToDb(this, myTitle, myAmount1, myMeasure, user_id!!)
+                prodCategory = intentProd.getStringExtra(ProdIntentConstants.I_CATEGORY_KEY)
+                if (myAmount == "0") {
+                    shopDbManager.insertToDb(this, myTitle, myAmount, myMeasure, user_id!!)
                 } else {
                     shopDbManager.deleteFromDb(this, myTitle, user_id!!)
                 }
-                productsDbManager.updateToDB(this, myTitle, prodCategory.toString(), myAmount1, myMeasure, user_id.toString(), id.toString())
+                productsDbManager.updateToDB(this, myTitle, prodCategory.toString(), myAmount, myMeasure, user_id.toString(), id.toString())
 
             } else {
-                if (myAmount1 == "0") {
-                    shopDbManager.insertToDb(this, myTitle, myAmount1, myMeasure, user_id!!)
+                if (myAmount == "0") {
+                    shopDbManager.insertToDb(this, myTitle, myAmount, myMeasure, user_id!!)
                 }
-                productsDbManager.insertToDb(this, myTitle, myCategory, myAmount1,myMeasure, user_id!!)
+                productsDbManager.insertToDb(this, myTitle, myCategory, myAmount,myMeasure, user_id!!)
             }
             finish()
         }
         finish()
     }
 
-
-    fun getMyIntents() {
+    //получение значений выбранного итема при редактировании
+    private fun getMyIntents() {
         val i = intent
         if (i != null) {
             if(i.getStringExtra(ProdIntentConstants.I_TITLE_KEY) != null) {
@@ -73,8 +70,6 @@ class EditProductActivity : AppCompatActivity() {
                 edAmount?.setText(i.getStringExtra(ProdIntentConstants.I_AMOUNT_KEY))
                 edMeasure?.setSelection(measureVals.indexOf(i.getStringExtra(ProdIntentConstants.I_MEASURE_KEY)))
                 prodCategory = i.getStringExtra(ProdIntentConstants.I_CATEGORY_KEY)!!
-                //Toast.makeText(this, prodCategory, Toast.LENGTH_LONG).show()
-
                 id = i.getIntExtra(ProdIntentConstants.I_ID_KEY, 0)
             }
         }

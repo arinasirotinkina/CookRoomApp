@@ -11,14 +11,11 @@ import android.widget.GridView
 import com.example.cookroom.adapters.CategoryAdapter
 import com.example.cookroom.models.CategoryItem
 
-
+//Фрагмент с категориями продуктов
 class ProductsFragment : Fragment(), AdapterView.OnItemClickListener {
     private var arrayList:ArrayList<CategoryItem>? = null
     private var gridView:GridView? = null
     private var productAdapter: CategoryAdapter? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,17 +27,15 @@ class ProductsFragment : Fragment(), AdapterView.OnItemClickListener {
 
     override fun onStart() {
         super.onStart()
-
-
         gridView = view?.findViewById(R.id.my_grid_view_list)
         arrayList = ArrayList()
         arrayList = setDataList()
         productAdapter = CategoryAdapter(requireContext(), arrayList!!)
         gridView?.adapter = productAdapter
         gridView?.onItemClickListener = this
-
     }
 
+    //категории продуктов
     private fun setDataList(): ArrayList<CategoryItem> {
         var arrayList:ArrayList<CategoryItem> = ArrayList()
         arrayList.add(CategoryItem(R.drawable.apple, "Фрукты"))
@@ -58,13 +53,11 @@ class ProductsFragment : Fragment(), AdapterView.OnItemClickListener {
         return arrayList
     }
 
+    //слушатель нажатий для категорий
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         var items : CategoryItem = arrayList!!.get(position)
-        //Toast.makeText(requireContext(), items.name, Toast.LENGTH_LONG).show()
         val intent = Intent(requireContext(), ProductListActivity::class.java)
         intent.putExtra("CHOSEN", items.name)
         startActivity(intent)
-
     }
-
 }

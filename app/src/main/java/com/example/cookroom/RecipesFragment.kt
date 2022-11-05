@@ -6,12 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
-import android.widget.Switch
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.AuthFailureError
@@ -25,41 +21,30 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONException
 import org.json.JSONObject
 
-
+//Фрагмент рецептов со списком рецептов
 class RecipesFragment : Fragment() {
-
     var rcView : RecyclerView? = null
     var tvNoElem : TextView? = null
-    var searchView: SearchView? = null
-    var prodCategory: String? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        var view = inflater.inflate(R.layout.fragment_recipes, container, false)
+        val view = inflater.inflate(R.layout.fragment_recipes, container, false)
         rcView = view.findViewById(R.id.rcView)
         tvNoElem = view.findViewById(R.id.tvNoElem)
-        //searchView = view.findViewById(R.id.searchView)
-        var fbNew = view.findViewById<FloatingActionButton>(R.id.fbNew)
+        val fbNew = view.findViewById<FloatingActionButton>(R.id.fbNew)
         fbNew.setOnClickListener{
-            var i = Intent(requireContext(), EditRecipeActivity::class.java)
+            val i = Intent(requireContext(), EditRecipeActivity::class.java)
             startActivity(i)
         }
         init()
-        //initSearchView()
         readRecipes()
         return view
     }
     override fun onStart() {
         super.onStart()
         init()
-        //initSearchView()
         readRecipes()
     }
     fun init() {
@@ -69,26 +54,9 @@ class RecipesFragment : Fragment() {
         //swapHelper.attachToRecyclerView(rcView)
         rcView?.adapter = myAdapter
     }
-    /*
-    private fun initSearchView() {
-        //val myDbManager = RecipeDbManager(requireContext())
-        val myAdapter = RecipeAdapter(ArrayList(), requireContext())
-        searchView?.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(p0: String?): Boolean {
-                return true
-            }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                val list = myDbManager.readDbData(newText!!)
-                myAdapter.updateAdapter(list)
-                return true
-            }
-        })
-    }*/
+    //заполнение RecyclerView
     fun fillAdapter(list: ArrayList<RecipeItem>) {
-        //val myDbManager = RecipeDbManager(requireContext())
-        //myDbManager.openDb()
-        //val list = myDbManager.readDbData("")
         val myAdapter = RecipeAdapter(ArrayList(), requireContext())
         myAdapter.updateAdapter(list)
         rcView?.adapter = myAdapter
@@ -117,50 +85,37 @@ class RecipesFragment : Fragment() {
             }
         })
     }*/
+
+    //Чтение рецептов из базы
     fun readRecipes() {
         val URL_READ1 = "https://cookroom.site/recipes_readall.php"
-        //val list = myDbManager.readDbData("", prodCategory!!)
-        var pref = requireActivity().getSharedPreferences("User_Id", AppCompatActivity.MODE_PRIVATE)
-        var user_id = pref.getString("user_id", "-1")
-
-        //Toast.makeText(requireContext(), user_id, Toast.LENGTH_LONG).show()
-        //val list = productsDbManager.readDbData(this, prodCategory!!, user_id.toString())
-
-
+        val pref = requireActivity().getSharedPreferences("User_Id", AppCompatActivity.MODE_PRIVATE)
+        val user_id = pref.getString("user_id", "-1")
         val stringRequest = object : StringRequest(
             Method.POST, URL_READ1,
-            Response.Listener<String> { response ->
+            Response.Listener { response ->
                 try {
                     val jsonObject = JSONObject(response.toString())
                     val success = jsonObject.getString("success")
                     val jsonArray = jsonObject.getJSONArray("recipe")
                     val list = java.util.ArrayList<RecipeItem>()
-                    //Toast.makeText(context,  success.toString(), Toast.LENGTH_LONG).show()
                     if (success.equals("1")) {
-                        //Toast.makeText(context, jsonArray.length().toString(), Toast.LENGTH_LONG).show()
                         for (i in 0 until jsonArray.length()) {
                             val obj = jsonArray.getJSONObject(i)
-                            val id = obj.getString("id").trim()
-                            var title = obj.getString("title").trim()
-                            var description = obj.getString("description").trim()
-                            //Toast.makeText(context, title, Toast.LENGTH_LONG).show()
-                            var item = RecipeItem()
-                            item.title = title
-                            item.description = description
-                            item.id = id.toInt()
+                            val item = RecipeItem()
+                            item.title = obj.getString("title").trim()
+                            item.description = obj.getString("description").trim()
+                            item.id = obj.getString("id").trim().toInt()
                             list.add(item)
                         }
                     }
                     fillAdapter(list)
-                    //Toast.makeText(context, list.size.toString(), Toast.LENGTH_LONG).show()
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
             },
-            object : Response.ErrorListener {
-                override fun onErrorResponse(error: VolleyError?) {
-                    //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
-                }
+            Response.ErrorListener {
+                //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
             }) {
             @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String>? {
@@ -169,10 +124,7 @@ class RecipesFragment : Fragment() {
                 return params
             }
         }
-        //Toast.makeText(context, dataList.size.toString(), Toast.LENGTH_LONG).show()
-
-        var requestQueue = Volley.newRequestQueue(requireContext())
+        val requestQueue = Volley.newRequestQueue(requireContext())
         requestQueue.add(stringRequest)
     }
-
 }

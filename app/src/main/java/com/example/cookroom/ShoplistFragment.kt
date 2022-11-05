@@ -1,6 +1,5 @@
 package com.example.cookroom
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,18 +12,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
-import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.cookroom.adapters.ItemProductAdapter
-import com.example.cookroom.adapters.RecipeAdapter
 import com.example.cookroom.adapters.ShopItemAdapter
 import com.example.cookroom.db.ShopDbManager
 import com.example.cookroom.models.ProdItem
 import org.json.JSONException
 import org.json.JSONObject
 
-
+//Фрагмент списка покупок
 class ShoplistFragment : Fragment() {
     private var rcView: RecyclerView? = null
     var tvNoElem: TextView? = null
@@ -36,21 +32,19 @@ class ShoplistFragment : Fragment() {
         var view = inflater.inflate(R.layout.fragment_shoplist, container, false)
         tvNoElem = view?.findViewById(R.id.tvNoElem)
         rcView = view?.findViewById(R.id.rcView)
-
         return view
     }
 
     override fun onStart() {
         super.onStart()
         init()
-        //initSearchView()
         readRecipes()
-
     }
+
     fun init() {
         rcView?.layoutManager = LinearLayoutManager(requireContext())
-
     }
+    //Заполнение списка
     fun fillAdapter(list: ArrayList<ProdItem>) {
         val myAdapter = ShopItemAdapter(ArrayList(), requireContext())
         myAdapter.updateAdapter(list)
@@ -63,6 +57,7 @@ class ShoplistFragment : Fragment() {
             tvNoElem?.visibility = View.VISIBLE
         }
     }
+    //Удаление по свайпу
     private fun getSwapMg(myAdapter: ShopItemAdapter) : ItemTouchHelper {
         return ItemTouchHelper(object: ItemTouchHelper.
         SimpleCallback(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT){
@@ -73,7 +68,6 @@ class ShoplistFragment : Fragment() {
             ): Boolean {
                 return false
             }
-
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val pref = requireActivity().getSharedPreferences("User_Id", AppCompatActivity.MODE_PRIVATE)
                 val user_id = pref.getString("user_id", "-1")
@@ -81,13 +75,14 @@ class ShoplistFragment : Fragment() {
             }
         })
     }
+    //Чтение из базы
     fun readRecipes() {
         val URL_READ1 = "https://cookroom.site/shop_readall.php"
-        var pref = requireActivity().getSharedPreferences("User_Id", AppCompatActivity.MODE_PRIVATE)
-        var user_id = pref.getString("user_id", "-1")
+        val pref = requireActivity().getSharedPreferences("User_Id", AppCompatActivity.MODE_PRIVATE)
+        val user_id = pref.getString("user_id", "-1")
         val stringRequest = object : StringRequest(
             Method.POST, URL_READ1,
-            Response.Listener<String> { response ->
+            Response.Listener { response ->
                 try {
                     val jsonObject = JSONObject(response.toString())
                     val success = jsonObject.getString("success")
@@ -97,16 +92,12 @@ class ShoplistFragment : Fragment() {
                     if (success.equals("1")) {
                         for (i in 0 until jsonArray.length()) {
                             val obj = jsonArray.getJSONObject(i)
-                            val id = obj.getString("id").trim()
-                            var title = obj.getString("title").trim()
-                            var amount = obj.getString("amount").trim()
-                            var measure = obj.getString("measure").trim()
-                            var item = ProdItem()
-                            item.id = id.toInt()
-                            item.title = title
+                            val item = ProdItem()
+                            item.id = obj.getString("id").trim().toInt()
+                            item.title = obj.getString("title").trim()
                             item.category = ""
-                            item.amount = amount.toDouble()
-                            item.measure = measure
+                            item.amount = obj.getString("amount").trim().toDouble()
+                            item.measure = obj.getString("measure").trim()
                             list.add(item)
                         }
                     }
@@ -115,20 +106,17 @@ class ShoplistFragment : Fragment() {
                     e.printStackTrace()
                 }
             },
-            object : Response.ErrorListener {
-                override fun onErrorResponse(error: VolleyError?) {
-                    //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
-                }
+            Response.ErrorListener {
+                //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
             }) {
             @Throws(AuthFailureError::class)
-            override fun getParams(): Map<String, String>? {
-                var params : HashMap<String, String> = HashMap<String, String>()
-                params.put("user_id", user_id!!)
+            override fun getParams(): Map<String, String> {
+                val params : HashMap<String, String> = HashMap()
+                params["user_id"] = user_id!!
                 return params
             }
         }
-        var requestQueue = Volley.newRequestQueue(requireContext())
+        val requestQueue = Volley.newRequestQueue(requireContext())
         requestQueue.add(stringRequest)
     }
-
 }

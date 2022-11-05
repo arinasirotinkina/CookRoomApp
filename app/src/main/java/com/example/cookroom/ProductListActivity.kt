@@ -1,16 +1,13 @@
 package com.example.cookroom
 
-import android.content.Context
-import java.util.ArrayList;
 
+import java.util.ArrayList;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity
-import android.widget.SearchView
 import android.widget.Toast
-import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.AuthFailureError
@@ -18,36 +15,26 @@ import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.cookroom.EditProductActivity
-import com.example.cookroom.R
 import com.example.cookroom.adapters.ItemProductAdapter
-import com.example.cookroom.db.products.ProductsDbManager
 import com.example.cookroom.models.ProdItem
 import org.json.JSONException
 import org.json.JSONObject
 
-
+//Активность списка продуктов в категории
 class ProductListActivity : AppCompatActivity() {
     val myAdapter = ItemProductAdapter(ArrayList(), this)
     var rcView : RecyclerView? = null
     var tvNoElem : TextView? = null
-    var searchView: SearchView? = null
     var prodCategory: String? = null
-    var productsDbManager = ProductsDbManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_list)
-
-
         rcView = findViewById(R.id.rcView)
         tvNoElem = findViewById(R.id.tvNoElem)
-
         val kt = intent
         prodCategory = kt.getCharSequenceExtra("CHOSEN").toString()
         init()
-        //initSearchView()
-
     }
 
     override fun onResume() {
@@ -55,6 +42,7 @@ class ProductListActivity : AppCompatActivity() {
         readDbData()
     }
 
+    //Слушатель нажатия кнопки добавления продукта
     fun onClickNew(view: View) {
         val i = Intent(this, EditProductActivity::class.java)
         i.putExtra("CHOSEN", prodCategory)
@@ -67,15 +55,11 @@ class ProductListActivity : AppCompatActivity() {
         //swapHelper.attachToRecyclerView(rcView)
         rcView?.adapter = myAdapter
     }
+
+    //Заполнение RecyclerView
     fun fillAdapter(list: ArrayList<ProdItem>) {
         val kt = intent
         prodCategory = kt.getCharSequenceExtra("CHOSEN").toString()
-        //val list = myDbManager.readDbData("", prodCategory!!)
-        var pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
-        var user_id = pref.getString("user_id", "-1")
-
-        //Toast.makeText(this, prodCategory, Toast.LENGTH_LONG).show()
-        //val list = productsDbManager.readDbData(this, prodCategory!!, user_id.toString())
         myAdapter.updateAdapter(list)
         if (list.size > 0) {
             tvNoElem?.visibility = View.GONE
@@ -99,17 +83,16 @@ class ProductListActivity : AppCompatActivity() {
             }
         })
     }*/
+    //Чтение данных из базы
     fun readDbData() {
         val URL_READ = "https://cookroom.site/products_readall.php"
         val kt = intent
         prodCategory = kt.getCharSequenceExtra("CHOSEN").toString()
-        //val list = myDbManager.readDbData("", prodCategory!!)
-        var pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
-        var user_id = pref.getString("user_id", "-1")
-
-        var stringRequest = object : StringRequest(
+        val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
+        val user_id = pref.getString("user_id", "-1")
+        val stringRequest = object : StringRequest(
             Method.POST, URL_READ,
-            Response.Listener<String> { response ->
+            Response.Listener { response ->
                 try {
                     val jsonObject = JSONObject(response.toString())
                     val success = jsonObject.getString("success")
@@ -118,18 +101,12 @@ class ProductListActivity : AppCompatActivity() {
                     if (success.equals("1")) {
                         for (i in 0 until jsonArray.length()) {
                             val obj = jsonArray.getJSONObject(i)
-                            val id = obj.getString("id").trim()
-                            var title = obj.getString("title").trim()
-                            var category = obj.getString("category").trim()
-                            var amount = obj.getString("amount").trim()
-                            var measure = obj.getString("measure").trim()
-                            //Toast.makeText(context, title, Toast.LENGTH_LONG).show()
-                            var item = ProdItem()
-                            item.title = title
-                            item.category = category
-                            item.amount = amount.toDouble()
-                            item.measure = measure
-                            item.id = id.toInt()
+                            val item = ProdItem()
+                            item.title = obj.getString("title").trim()
+                            item.category = obj.getString("category").trim()
+                            item.amount = obj.getString("amount").trim().toDouble()
+                            item.measure = obj.getString("measure").trim()
+                            item.id = obj.getString("id").trim().toInt()
                             list.add(item)
                         }
                     }
@@ -138,23 +115,18 @@ class ProductListActivity : AppCompatActivity() {
                     e.printStackTrace()
                 }
             },
-            object : Response.ErrorListener {
-                override fun onErrorResponse(error: VolleyError?) {
-                    //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
-                }
+            Response.ErrorListener {
+                //Toast.makeText(this, error.message , Toast.LENGTH_LONG).show()
             }) {
             @Throws(AuthFailureError::class)
-            override fun getParams(): Map<String, String>? {
-                var params : HashMap<String, String> = HashMap<String, String>()
+            override fun getParams(): Map<String, String> {
+                var params : HashMap<String, String> = HashMap()
                 params.put("category",prodCategory!!)
                 params.put("user_id", user_id!!)
                 return params
             }
         }
-
-        var requestQueue = Volley.newRequestQueue(this)
+        val requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
-
     }
-
 }

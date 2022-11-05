@@ -10,12 +10,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
-import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONException
 import org.json.JSONObject
 
+//Активность регистрации
 class RegistrationActivity : AppCompatActivity() {
     var email : EditText? = null
     var password : EditText? = null
@@ -51,34 +51,28 @@ class RegistrationActivity : AppCompatActivity() {
         return Patterns.EMAIL_ADDRESS.matcher(email!!)
             .matches()
     }
+    //регистрация
     private fun register() {
         val userEmail = this.email?.text.toString().trim()
         val userPassword = this.password?.text.toString().trim()
-
         val stringRequest = object : StringRequest(
             Method.POST, URL_REGIST,
-            Response.Listener<String> { response ->
+            Response.Listener { response ->
                 try {
                     val obj = JSONObject(response.toString())
                     Toast.makeText(applicationContext, obj.getString("message"), Toast.LENGTH_LONG).show()
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
-
             },
-            object : Response.ErrorListener {
-                override fun onErrorResponse(error: VolleyError?) {
-                    Toast.makeText(applicationContext, error?.message, Toast.LENGTH_LONG).show()
-                }
-            }) {
-
+            Response.ErrorListener { error -> Toast.makeText(applicationContext, error?.message,
+                Toast.LENGTH_LONG).show() }) {
             @Throws (AuthFailureError::class)
-                override fun getParams(): Map<String, String>? {
-                    val params : HashMap<String, String> = HashMap<String, String>()
+                override fun getParams(): Map<String, String> {
+                    val params : HashMap<String, String> = HashMap()
                     params["email"] = userEmail
                     params["password"] = userPassword
                     return params
-
                 }
         }
         val requestQueue = Volley.newRequestQueue(this)

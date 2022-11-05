@@ -6,10 +6,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
-import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.cookroom.db.recipes.RecipeIntentConstants
@@ -18,6 +16,7 @@ import com.example.cookroom.models.ProdItem
 import org.json.JSONException
 import org.json.JSONObject
 
+//Активность редактирования/добавления рецепта
 class EditRecipeActivity : AppCompatActivity() {
     val recipesDbManager = RecipesDbManager()
     var id = 0
@@ -34,7 +33,7 @@ class EditRecipeActivity : AppCompatActivity() {
         edDesc = findViewById(R.id.edDesc)
         getMyIntents()
     }
-
+    //слушатель нажатий кнопки сохранения
     fun onClickSave(view: View) {
         val myTitle = edTitle?.text.toString()
         val myDesc = edDesc?.text.toString()
@@ -51,6 +50,7 @@ class EditRecipeActivity : AppCompatActivity() {
         finish()
     }
 
+    //получение данных итема при нажатии на него для редактирования
     private fun getMyIntents() {
         val i = intent
         if (i != null) {
@@ -63,6 +63,7 @@ class EditRecipeActivity : AppCompatActivity() {
         }
     }
 
+    //слушатель нажатий кнопки добавления ингредиентов
     fun onClickAdd(view: View) {
         val myTitle = edTitle?.text.toString()
         val myDesc = edDesc?.text.toString()
@@ -79,7 +80,7 @@ class EditRecipeActivity : AppCompatActivity() {
         val URL_SEARCH = "https://cookroom.site/recipes_getid.php"
         val stringRequest = object : StringRequest(
             Method.POST, URL_SEARCH,
-            Response.Listener<String> { response ->
+            Response.Listener { response ->
                 try {
                     val jsonObject = JSONObject(response.toString())
                     val success = jsonObject.getString("success")
@@ -99,23 +100,23 @@ class EditRecipeActivity : AppCompatActivity() {
                 //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
             }) {
             @Throws(AuthFailureError::class)
-            override fun getParams(): Map<String, String>? {
-                var params: HashMap<String, String> = HashMap<String, String>()
-                params.put("user_id", user_id!!)
-                params.put("title", myTitle)
-                params.put("description", myDesc)
+            override fun getParams(): Map<String, String> {
+                val params: HashMap<String, String> = HashMap()
+                params["user_id"] = user_id!!
+                params["title"] = myTitle
+                params["description"] = myDesc
                 return params
             }
         }
-        var requestQueue = Volley.newRequestQueue(this)
+        val requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
     }
-
+    //слушатель нажатий кнопки приготовления
     fun onClickCook(view: View) {
         val myTitle = edTitle?.text.toString()
         val myDesc = edDesc?.text.toString()
-        var pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
-        var user_id = pref.getString("user_id", "-1")
+        val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
+        val user_id = pref.getString("user_id", "-1")
         if (myTitle != "") {
             if (isEditState) {
                 recipesDbManager.updateToDB(this, myTitle, myDesc, user_id!!, id.toString())
@@ -127,12 +128,13 @@ class EditRecipeActivity : AppCompatActivity() {
         check(user_id!!, myTitle, myDesc)
     }
 
+    //Проверка возможности приготовления рецепта
     fun check(user_id: String, myTitle: String, myDesc: String)  {
 
         fun setId(recipe_id: String) {
 
             fun checkList(list: ArrayList<ProdItem>, recipe_id : String) {
-
+                //Запуск активности в зависимости от возможности приготовить рецепт
                 fun start(minus_list: ArrayList<ProdItem>, recipe_id: String) {
 
                     var flag = true
@@ -153,11 +155,11 @@ class EditRecipeActivity : AppCompatActivity() {
                         startActivity(i)
                     }
                 }
-
+                //Сравнение количества продукта пользователя и количества ингредиента
                 val URL_SELECT = "https://cookroom.site/products_select.php"
-                var stringRequest = object : StringRequest(
+                val stringRequest = object : StringRequest(
                     Method.POST, URL_SELECT,
-                    Response.Listener<String> { response ->
+                    Response.Listener { response ->
                         try {
                             val jsonObject = JSONObject(response.toString())
                             val success = jsonObject.getString("success")
@@ -174,7 +176,7 @@ class EditRecipeActivity : AppCompatActivity() {
                                     item.id = obj.getString("id").trim().toInt()
                                     for (ik in list) {
                                         if (ik.id == item.id) {
-                                            var temp = ProdItem()
+                                            val temp = ProdItem()
                                             temp.id = ik.id
                                             temp.title = ik.title
                                             temp.category = item.category
@@ -205,22 +207,22 @@ class EditRecipeActivity : AppCompatActivity() {
                     }) {
                     @Throws(AuthFailureError::class)
                     override fun getParams(): Map<String, String>? {
-                        var params : HashMap<String, String> = HashMap<String, String>()
-                        params.put("user_id", user_id!!)
+                        val params : HashMap<String, String> = HashMap<String, String>()
+                        params["user_id"] = user_id
                         return params
                     }
                 }
-                var requestQueue = Volley.newRequestQueue(this)
+                val requestQueue = Volley.newRequestQueue(this)
                 requestQueue.add(stringRequest)
 
             }
-
+            //Получение ингредиентов рецепта
             val URL_READ = "https://cookroom.site/depending_readall.php"
             val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
             val user_id = pref.getString("user_id", "-1")
             val stringRequest = object : StringRequest(
                 Method.POST, URL_READ,
-                Response.Listener<String> { response ->
+                Response.Listener { response ->
                     try {
                         val jsonObject = JSONObject(response.toString())
                         val success = jsonObject.getString("success")
@@ -247,29 +249,31 @@ class EditRecipeActivity : AppCompatActivity() {
                     //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
                 }) {
                 @Throws(AuthFailureError::class)
-                override fun getParams(): Map<String, String>? {
-                    var params : HashMap<String, String> = HashMap<String, String>()
-                    params.put("recipe_id", recipe_id!!)
-                    params.put("user_id", user_id!!)
+                override fun getParams(): Map<String, String> {
+                    val params : HashMap<String, String> = HashMap()
+                    params["recipe_id"] = recipe_id
+                    params["user_id"] = user_id!!
                     return params
                 }
             }
-            var requestQueue = Volley.newRequestQueue(this)
+            val requestQueue = Volley.newRequestQueue(this)
             requestQueue.add(stringRequest)
 
         }
 
+        //Получение id рецепта
         val URL_SEARCH = "https://cookroom.site/recipes_getid.php"
-        var stringRequest = object : StringRequest(
+        val stringRequest = object : StringRequest(
             Method.POST, URL_SEARCH,
-            Response.Listener<String> { response ->
+            Response.Listener { response ->
                 try {
                     val jsonObject = JSONObject(response.toString())
                     val success = jsonObject.getString("success")
                     val jsonArray = jsonObject.getJSONArray("recipe")
                     if (success.equals("1")) {
-                        var obj = jsonArray.getJSONObject(0)
-                        var ids = obj.getString("id").trim()
+                        val obj = jsonArray.getJSONObject(0)
+                        val ids = obj.getString("id").trim()
+                        //Вызывается функция выше
                         setId(ids)
                     }
                 } catch (e: JSONException) {
@@ -280,15 +284,15 @@ class EditRecipeActivity : AppCompatActivity() {
                 //Toast.makeText(this, error?.message.toString(), Toast.LENGTH_LONG).show()
             }) {
             @Throws(AuthFailureError::class)
-            override fun getParams(): Map<String, String>? {
-                var params: HashMap<String, String> = HashMap<String, String>()
-                params.put("user_id", user_id)
-                params.put("title", myTitle)
-                params.put("description", myDesc)
+            override fun getParams(): Map<String, String> {
+                val params: HashMap<String, String> = HashMap()
+                params["user_id"] = user_id
+                params["title"] = myTitle
+                params["description"] = myDesc
                 return params
             }
         }
-        var requestQueue = Volley.newRequestQueue(this)
+        val requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
     }
 }

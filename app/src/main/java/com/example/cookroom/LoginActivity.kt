@@ -16,15 +16,15 @@ import org.json.JSONException
 import org.json.JSONObject
 import kotlin.jvm.Throws
 
+//Активность входа
 class LoginActivity : AppCompatActivity() {
     var email : EditText? = null
     var password : EditText? = null
     var loginButton : Button? = null
     var notHaveAcc : TextView? = null
     var sessionManager = SessionManager(this)
-    companion object  {
-        var URL_LOGIN = "https://cookroom.site/login.php"
-    }
+    var URL_LOGIN = "https://cookroom.site/login.php"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -36,22 +36,21 @@ class LoginActivity : AppCompatActivity() {
         loginButton?.setOnClickListener() {
             val mEmail : String = email?.text.toString().trim()
             val mPassword : String = password?.text.toString().trim()
-
             if (mEmail.isNotEmpty() || mPassword.isNotEmpty()) {
                 login(mEmail, mPassword)
             }
         }
         notHaveAcc?.setOnClickListener() {
-            var i = Intent(this, RegistrationActivity::class.java)
+            val i = Intent(this, RegistrationActivity::class.java)
             startActivity(i)
             finish()
         }
-
     }
+    //вход
     private fun login(email: String, password: String){
         var stringRequest = object : StringRequest(
-            Method.POST, LoginActivity.URL_LOGIN,
-            Response.Listener<String> { response ->
+            Method.POST, URL_LOGIN,
+            Response.Listener { response ->
                 try {
                     val jsonObject = JSONObject(response.toString())
                     val success = jsonObject.getString("success")
@@ -74,25 +73,18 @@ class LoginActivity : AppCompatActivity() {
                     e.printStackTrace()
                     Toast.makeText(this, "failed ${e.toString()}", Toast.LENGTH_LONG).show()
                 }
-
             },
-            object : Response.ErrorListener {
-                override fun onErrorResponse(error: VolleyError?) {
-                    Toast.makeText(applicationContext, error?.toString(), Toast.LENGTH_LONG).show()
-                }
-            }) {
-
+            Response.ErrorListener { error -> Toast.makeText(applicationContext, error?.toString(),
+                Toast.LENGTH_LONG).show() }) {
             @Throws(AuthFailureError::class)
-            override fun getParams(): Map<String, String>? {
-                val params : HashMap<String, String> = HashMap<String, String>()
+            override fun getParams(): Map<String, String> {
+                val params : HashMap<String, String> = HashMap()
                 params["email"] = email
                 params["password"] = password
                 return params
-
             }
         }
         val requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
-
     }
 }

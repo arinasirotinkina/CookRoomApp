@@ -1,13 +1,6 @@
 package com.example.cookroom
 
-import android.app.AlarmManager
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,13 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.widget.SwitchCompat
-import androidx.core.content.ContextCompat.getSystemService
 import com.example.cookroom.db.UserDbManager
-import org.w3c.dom.Text
 import java.util.*
 import kotlin.collections.HashMap
 
-
+//Фрагмент личного кабинета
 class UserFragment : Fragment() {
     var email : TextView? = null
     var logout : Button? = null
@@ -34,7 +25,7 @@ class UserFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var view = inflater.inflate(R.layout.fragment_user, container, false)
+        val view = inflater.inflate(R.layout.fragment_user, container, false)
         timePicker = view.findViewById(R.id.timePicker)
         notifOnOff = view.findViewById(R.id.notif)
         email = view?.findViewById(R.id.email)
@@ -47,18 +38,18 @@ class UserFragment : Fragment() {
         sessionManager.sessionManage(requireContext())
         sessionManager.checkLogin()
         val user : HashMap<String, String> = sessionManager.getUserDetails()
-        val mEmail = user.get(sessionManager.EMAIL)
-        val user_id = user.get(sessionManager.ID)
-        val time = user.get(sessionManager.TIME)
+        val mEmail = user[sessionManager.EMAIL]
+        val user_id = user[sessionManager.ID]
+        val time = user[sessionManager.TIME]
 
         val sharedPreferences = requireContext().getSharedPreferences("User_Id", Context.MODE_PRIVATE)
         sharedPreferences.edit().putString("user_id", user_id).apply()
         email?.setText(mEmail)
-
+        //кнопка выхода
         logout?.setOnClickListener {
             sessionManager.logout()
         }
-
+        //показ часов
         if (time != "null") {
             notifOnOff?.isChecked = true
             timePicker?.visibility = View.VISIBLE
@@ -68,7 +59,7 @@ class UserFragment : Fragment() {
             timePicker?.minute = times[1].toInt()
 
         }
-
+        //Установка в автоматическое время при включении, выключение
         notifOnOff?.setOnCheckedChangeListener { buttonView, isChecked ->
             val sessionManager = SessionManager(requireContext())
             if(isChecked){
@@ -85,8 +76,7 @@ class UserFragment : Fragment() {
                 sessionManager.updateSession(requireContext(), user_id, mEmail!!, null)
             }
         }
-
-
+        //Новое время
         saveTime?.setOnClickListener{
             var time_picked = "${timePicker!!.hour}:${timePicker!!.minute}:00"
             sessionManager.updateSession(requireContext(), user_id!!, mEmail!!, time_picked)
@@ -96,11 +86,7 @@ class UserFragment : Fragment() {
             calendar.set(Calendar.MINUTE, timePicker!!.getMinute());
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
-            //Toast.makeText(requireActivity(), calendar.toString(), Toast.LENGTH_LONG).show()
         }
         return view
     }
-
-
-
 }

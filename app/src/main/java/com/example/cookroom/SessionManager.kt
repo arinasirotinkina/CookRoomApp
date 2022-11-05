@@ -3,8 +3,8 @@ package com.example.cookroom
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.widget.Toast
 
+//Пользовательская сессия
 class SessionManager(context: Context) {
     var sharedPreferences : SharedPreferences? = null
     var editor : SharedPreferences.Editor? = null
@@ -17,12 +17,12 @@ class SessionManager(context: Context) {
         editor = sharedPreferences?.edit()
     }
 
-    var PREF_NAME = "LOGIN"
     var LOGIN =  "IS_LOGIN"
     var EMAIL = "EMAIL"
     var ID = "ID"
     var TIME = "TIME"
 
+    //создание сессии при входе
     fun createSession(context: Context, email : String, id: String, time: String) {
         editor?.putBoolean(LOGIN, true)
         editor?.putString(EMAIL, email)
@@ -31,20 +31,21 @@ class SessionManager(context: Context) {
         editor?.apply()
         notificationManager.createNotificationChannel(context)
         notificationManager.setAlarm(context, time)
-
     }
+
     fun isLogin(): Boolean? {
         return sharedPreferences?.getBoolean(LOGIN, false)
-
     }
+    //проверка авторизованности
     fun checkLogin() {
         if (!isLogin()!!) {
             var i = Intent(context, LoginActivity::class.java)
             (context as MainActivity).finish()
             context!!.startActivity(i)
-
         }
     }
+
+    //пользовательская информация
     fun getUserDetails(): HashMap<String, String> {
         var user : HashMap<String, String> = HashMap()
         user.put(EMAIL, sharedPreferences?.getString(EMAIL, null).toString())
@@ -52,6 +53,7 @@ class SessionManager(context: Context) {
         user.put(TIME, sharedPreferences?.getString(TIME, null).toString())
         return user
     }
+    //выход из аккаунта
     fun logout() {
         editor?.clear()
         editor?.commit()
@@ -60,6 +62,7 @@ class SessionManager(context: Context) {
         context!!.startActivity(i)
         notificationManager.cancelAlarm(context!!)
     }
+    //Обновление сессии
     fun updateSession(context: Context, id: String, email: String, time: String?){
         editor?.clear()
         editor?.commit()
@@ -74,7 +77,6 @@ class SessionManager(context: Context) {
         if (time != null){
             notificationManager.createNotificationChannel(context)
             notificationManager.setAlarm(context, time)
-            //Toast.makeText(context, "fvef", Toast.LENGTH_LONG).show()
         }
     }
 }
