@@ -39,7 +39,9 @@ class RegistrationActivity : AppCompatActivity() {
         }
         registerButton?.setOnClickListener{
             if (isEmailValid(email!!.text) and (password!!.text.toString() == passwordConfirm!!.text.toString())) {
-                register()
+                val userEmail = this.email?.text.toString().trim()
+                val userPassword = this.password?.text.toString().trim()
+                register(userEmail, userPassword)
             } else if (!isEmailValid(email!!.text)){
                 Toast.makeText(this, "Неверный email-адрес", Toast.LENGTH_LONG).show()
             } else {
@@ -52,9 +54,7 @@ class RegistrationActivity : AppCompatActivity() {
             .matches()
     }
     //регистрация
-    private fun register() {
-        val userEmail = this.email?.text.toString().trim()
-        val userPassword = this.password?.text.toString().trim()
+    fun register(userEmail: String, userPassword:String) :Boolean {
         val stringRequest = object : StringRequest(
             Method.POST, URL_REGIST,
             Response.Listener { response ->
@@ -78,5 +78,6 @@ class RegistrationActivity : AppCompatActivity() {
         }
         val requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
+        return true
     }
 }

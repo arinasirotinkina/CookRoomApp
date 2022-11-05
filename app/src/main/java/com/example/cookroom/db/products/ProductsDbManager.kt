@@ -22,7 +22,8 @@ class ProductsDbManager {
     var selectList = ArrayList<String>()
     var prod : String = ""
 
-    fun insertToDb(context: Context, title: String, category: String, amount: String, measure: String, user_id: String) {
+    fun insertToDb(context: Context, title: String, category: String, amount: String,
+                   measure: String, user_id: String){
         var stringRequest = object : StringRequest(
             Method.POST, URL_INSERT,
             Response.Listener<String> { response ->
