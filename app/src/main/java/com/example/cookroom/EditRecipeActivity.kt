@@ -24,6 +24,7 @@ class EditRecipeActivity : AppCompatActivity() {
     var edTitle: EditText? = null
     var edDesc: EditText? = null
     var addIngred: Button? = null
+    var deleteRecipe: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +32,15 @@ class EditRecipeActivity : AppCompatActivity() {
         addIngred = findViewById(R.id.button)
         edTitle = findViewById(R.id.edTitle)
         edDesc = findViewById(R.id.edDesc)
+        deleteRecipe = findViewById(R.id.deleteButton)
         getMyIntents()
+        val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
+        val user_id = pref.getString("user_id", "-1")
+        deleteRecipe?.setOnClickListener {
+            recipesDbManager.deleteFromDb(this, user_id!!, id.toString())
+            finish()
+        }
+
     }
     //слушатель нажатий кнопки сохранения
     fun onClickSave(view: View) {
@@ -60,6 +69,9 @@ class EditRecipeActivity : AppCompatActivity() {
                 edDesc?.setText(i.getStringExtra(RecipeIntentConstants.I_DESC_KEY))
                 id = i.getIntExtra(RecipeIntentConstants.I_ID_KEY, 0)
             }
+        }
+        if (!isEditState) {
+            deleteRecipe?.visibility = View.GONE
         }
     }
 
@@ -191,6 +203,10 @@ class EditRecipeActivity : AppCompatActivity() {
                                                     || (ik.measure == "л"  && item.measure == "мл")) {
                                                 temp.measure = item.measure
                                                 temp.amount = item.amount!! - ik.amount!! * 1000
+                                            }
+                                            else {
+                                                temp.measure = ik.measure
+                                                temp.amount = -1 * ik.amount!!
                                             }
                                             minus_list.add(temp)
                                         }

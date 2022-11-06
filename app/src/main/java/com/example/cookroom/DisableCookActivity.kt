@@ -74,6 +74,9 @@ class DisableCookActivity : AppCompatActivity() {
                                         || (ik.measure == "л"  && item.measure == "мл")) {
                                         temp.measure = item.measure
                                         temp.amount = item.amount!! + ik.amount!! * 1000
+                                    } else {
+                                        temp.measure = item.measure
+                                        temp.amount = item.amount
                                     }
                                     shopDbManager.insertToDb(this, item.title!!,
                                         temp.amount.toString(), temp.measure!!, user_id!!)
