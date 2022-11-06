@@ -23,7 +23,7 @@ class RecipeAdapter(listMain: ArrayList<RecipeItem>, contextM: Context): Recycle
             tvTitle.text = item.title
             tvDesc.text = item.description
             if (item.description!!.length > 200){
-                tvDesc.text = item.description.toString().substring(0, 200)
+                tvDesc.text = "${item.description.toString().substring(0, 200)}..."
             }
             itemView.setOnClickListener{
                 val intent = Intent(context, EditRecipeActivity::class.java).apply {

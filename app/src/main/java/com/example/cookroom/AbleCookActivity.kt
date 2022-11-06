@@ -43,7 +43,7 @@ class AbleCookActivity : AppCompatActivity() {
                             val id = obj.getString("id").trim()
                             for (ik in minus_list!!) {
                                 if (ik.id.toString() == id) {
-                                    productsDbManager.updateToDB(this, ik.title!!, ik.category!!, ik.amount!!.toInt().toString(), ik.measure!!, user_id!!, ik.id.toString())
+                                    productsDbManager.updateToDB(this, ik.title!!, ik.category!!, ik.amount!!.toDouble().toString(), ik.measure!!, user_id!!, ik.id.toString())
                                 }
                             }
                         }

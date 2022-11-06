@@ -6,12 +6,14 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.cookroom.db.recipes.RecipeIntentConstants
 import com.example.cookroom.db.recipes.RecipesDbManager
+import com.example.cookroom.models.MeasureTrans
 import com.example.cookroom.models.ProdItem
 import org.json.JSONException
 import org.json.JSONObject
@@ -195,16 +197,28 @@ class EditRecipeActivity : AppCompatActivity() {
                                             if (ik.measure == item.measure) {
                                                 temp.measure = item.measure
                                                 temp.amount = item.amount!! - ik.amount!!
-                                            } else if ((ik.measure == "г"  && item.measure == "кг")
-                                                || (ik.measure == "мл"  && item.measure == "л")) {
-                                                temp.measure = ik.measure
-                                                temp.amount = item.amount!! * 1000 - ik.amount!!
-                                            } else if ((ik.measure == "кг"  && item.measure == "г")
-                                                    || (ik.measure == "л"  && item.measure == "мл")) {
+                                            } else if ((ik.measure == "г" && item.measure == "кг")
+                                                || (ik.measure == "мл" && item.measure == "л")
+                                            ) {
+                                                temp.measure = item.measure
+                                                temp.amount = item.amount!! - ik.amount!! / 1000
+                                                //Toast.makeText(this, temp.amount.toString(), Toast.LENGTH_LONG).show()
+                                            } else if ((ik.measure == "кг" && item.measure == "г")
+                                                || (ik.measure == "л" && item.measure == "мл")
+                                            ) {
                                                 temp.measure = item.measure
                                                 temp.amount = item.amount!! - ik.amount!! * 1000
-                                            }
-                                            else {
+                                            } else if (ik.measure == "шт" && item.measure == "г") {
+                                                var p = MeasureTrans()
+                                                var t = p.transFromShtToG(ik)
+                                                temp.amount = item.amount!! - t.amount!!
+                                                temp.measure = t.measure
+                                            } else if (ik.measure == "шт" && item.measure == "кг") {
+                                                var p = MeasureTrans()
+                                                var t = p.transFromShtToKg(ik)
+                                                temp.amount = item.amount!! - t.amount!!
+                                                temp.measure = t.measure
+                                            }else {
                                                 temp.measure = ik.measure
                                                 temp.amount = -1 * ik.amount!!
                                             }

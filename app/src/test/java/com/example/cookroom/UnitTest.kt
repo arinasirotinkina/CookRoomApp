@@ -3,6 +3,7 @@ package com.example.cookroom
 import androidx.test.core.app.ActivityScenario
 import com.example.cookroom.db.products.ProductsDbManager
 import com.example.cookroom.models.CategoryItem
+import com.example.cookroom.models.MeasureTrans
 import com.example.cookroom.models.ProdItem
 import com.example.cookroom.models.RecipeItem
 import org.junit.Assert.assertEquals
@@ -48,6 +49,22 @@ class CategoryTest {
     }
 }
 
+class TransTesting {
+    @Test
+    fun shtKgTest() {
+        val item = ProdItem()
+        item.title = "яблоки"
+        item.measure = "шт"
+        item.amount = 3.0
+        var p = MeasureTrans()
+        var k = p.transFromShtToG(item)
+        assertAll("category",
+            Executable { assertEquals(300.0, k.amount) },
+            Executable { assertEquals("г", k.measure) }
+
+        )
+    }
+}
 class InsertTest {
     @Test
     fun insTesting() {
@@ -61,7 +78,6 @@ class InsertTest {
     }
 
 }
-
 
 
 class ExampleUnitTest {
