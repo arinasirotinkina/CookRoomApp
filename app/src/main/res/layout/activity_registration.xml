@@ -6,16 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".RegistrationActivity">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="1000dp"
+        android:layout_height="1000dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/group1" />
+
     <EditText
         android:id="@+id/email"
         android:layout_width="280dp"
         android:layout_height="50dp"
-        android:layout_marginTop="172dp"
+        android:layout_marginTop="184dp"
         android:ems="10"
         android:hint="email"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,7 +54,7 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordConfirm"
-        app:layout_constraintVertical_bias="0.343" />
+        app:layout_constraintVertical_bias="0.312" />
 
     <EditText
         android:id="@+id/passwordConfirm"
@@ -82,4 +92,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/registerButton"
         app:layout_constraintVertical_bias="0.313" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

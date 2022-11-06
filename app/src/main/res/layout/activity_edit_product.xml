@@ -6,7 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".EditProductActivity">
 
-
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="1000dp"
+        android:layout_height="1000dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/group1" />
     <EditText
         android:id="@+id/edTitle"
         android:layout_width="320dp"
@@ -64,8 +72,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
-        android:background="@color/white"
-        android:backgroundTint="@color/white"
         android:text="Добавление продукта"
         android:textColor="@color/black"
         android:textSize="24sp"

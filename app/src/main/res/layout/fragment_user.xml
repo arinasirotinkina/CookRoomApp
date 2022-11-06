@@ -40,7 +40,7 @@
         android:layout_marginTop="16dp"
         android:clickable="true"
         android:focusable="true"
-        android:text="Log out"
+        android:text="выйти"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.948"
         app:layout_constraintStart_toStartOf="parent"
