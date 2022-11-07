@@ -80,7 +80,7 @@ class AddIngredActivity : AppCompatActivity() {
         if (amount.toDoubleOrNull() == null && amount.toIntOrNull() == null) {
             Toast.makeText(this, "Количество введено не в числовом формате", Toast.LENGTH_LONG).show()
         }else if (title !in selectList && !flag) {
-            Toast.makeText(this, "", Toast.LENGTH_LONG).show()
+            //Toast.makeText(this, "", Toast.LENGTH_LONG).show()
             addCategory?.visibility = View.VISIBLE
             flag = true
         }

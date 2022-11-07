@@ -18,7 +18,7 @@ class UserDbManager {
             Response.Listener<String> { response ->
                 try {
                     val obj = JSONObject(response.toString())
-                    Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show()
+                    //Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show()
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
@@ -43,7 +43,7 @@ class UserDbManager {
             Response.Listener<String> { response ->
                 try {
                     val obj = JSONObject(response.toString())
-                    Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show()
+                    //Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show()
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }

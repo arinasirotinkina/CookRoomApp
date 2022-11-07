@@ -20,7 +20,6 @@ class EditShopItemActivity : AppCompatActivity() {
     var edMeasure : Spinner? = null
     var prodCategory : String  = ""
     val measureVals = listOf("шт", "кг", "г", "л", "мл")
-    val productsDbManager = ProductsDbManager()
     var shopDbManager = ShopDbManager()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,10 +33,7 @@ class EditShopItemActivity : AppCompatActivity() {
     }
     //Слушатель нажатий кнопки сохранения
     fun onClickSave(view: View) {
-        val intentProd = intent
-        var prodCategory = intentProd!!.getCharSequenceExtra("CHOSEN")
         val myTitle = edTitle?.text.toString()
-        val myCategory = prodCategory.toString()
         val myAmount = edAmount?.text.toString()
         val myMeasure = edMeasure?.selectedItem.toString()
         val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)

@@ -107,7 +107,7 @@ class ShoplistFragment : Fragment() {
                     val success = jsonObject.getString("success")
                     val jsonArray = jsonObject.getJSONArray("shop")
                     val list = java.util.ArrayList<ProdItem>()
-                    Toast.makeText(context,  success.toString(), Toast.LENGTH_LONG).show()
+                    //Toast.makeText(context,  success.toString(), Toast.LENGTH_LONG).show()
                     if (success.equals("1")) {
                         for (i in 0 until jsonArray.length()) {
                             val obj = jsonArray.getJSONObject(i)

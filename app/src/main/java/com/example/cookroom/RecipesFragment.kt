@@ -105,8 +105,8 @@ class RecipesFragment : Fragment() {
                 Toast.makeText(requireContext(), error?.message, Toast.LENGTH_LONG).show()
             }) {
             @Throws(AuthFailureError::class)
-            override fun getParams(): Map<String, String>? {
-                var params : HashMap<String, String> = HashMap<String, String>()
+            override fun getParams(): Map<String, String> {
+                val params : HashMap<String, String> = HashMap()
                 params["user_id"] = user_id!!
                 return params
             }
