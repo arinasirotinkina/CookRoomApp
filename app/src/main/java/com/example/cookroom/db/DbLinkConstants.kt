@@ -27,4 +27,5 @@ object DbLinkConstants {
     const val URL_SHOP_READ = "https://cookroom.site/shop_readall.php"
     const val URL_SHOP_INSERT = "https://cookroom.site/shop_insert.php"
     const val URL_SHOP_DELETE = "https://cookroom.site/shop_delete.php"
+    const val URL_SHOP_INSERT_NULL = "https://cookroom.site/shop_insert_null.php"
 }

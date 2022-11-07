@@ -45,7 +45,7 @@ class EditProductActivity : AppCompatActivity() {
                 if (myAmount == "0") {
                     shopDbManager.insertToDb(this, myTitle, myAmount, myMeasure, user_id!!)
                 } else {
-                    shopDbManager.deleteFromDb(this, myTitle, user_id!!)
+                    //shopDbManager.deleteFromDb(this, myTitle, user_id!!)
                 }
                 productsDbManager.updateToDB(this, myTitle, prodCategory.toString(),
                     myAmount, myMeasure, user_id.toString(), id.toString())

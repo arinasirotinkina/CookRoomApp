@@ -14,9 +14,14 @@ import org.json.JSONObject
 
 class ShopDbManager {
 
-    fun insertToDb(context: Context, title: String, amount: String, measure: String, user_id: String) {
+    fun insertToDb(context: Context, title: String, amount: String,
+                   measure: String, user_id: String) {
+        var URL_INS = DbLinkConstants.URL_SHOP_INSERT
+        if (amount == "0"){
+            URL_INS = DbLinkConstants.URL_SHOP_INSERT_NULL
+        }
         val stringRequest = object : StringRequest(
-            Method.POST, DbLinkConstants.URL_SHOP_INSERT,
+            Method.POST, URL_INS,
             Response.Listener { response ->
                 try {
                     val obj = JSONObject(response.toString())
