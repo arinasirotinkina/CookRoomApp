@@ -65,6 +65,38 @@ class TransTesting {
         )
     }
 }
+class TransTestingd {
+    @Test
+    fun shtKgTest() {
+        val item = ProdItem()
+        item.title = "яблоки"
+        item.measure = "г"
+        item.amount = 300.0
+        var p = MeasureTrans()
+        var k = p.transFromGToSht(item)
+        assertAll("category",
+            Executable { assertEquals(3.0, k.amount) },
+            Executable { assertEquals("шт", k.measure) }
+
+        )
+    }
+}
+class TransTestingds {
+    @Test
+    fun shtKgTest() {
+        val item = ProdItem()
+        item.title = "яблоки"
+        item.measure = "кг"
+        item.amount = 1.0
+        var p = MeasureTrans()
+        var k = p.transFromKgToSht(item)
+        assertAll("category",
+            Executable { assertEquals(10.0, k.amount) },
+            Executable { assertEquals("шт", k.measure) }
+
+        )
+    }
+}
 class InsertTest {
     @Test
     fun insTesting() {

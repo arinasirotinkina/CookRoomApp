@@ -219,7 +219,12 @@ class EditRecipeActivity : AppCompatActivity() {
                                                 temp.measure = t.measure
                                             } else if (ik.measure == "г" && item.measure == "шт"
                                                 && temp.title in measureTrans.measureVals) {
-                                                var t = measureTrans.transFromShtToG(item)
+                                                var t = measureTrans.transFromGToSht(ik)
+                                                temp.amount = item.amount!! - t.amount!!
+                                                temp.measure = t.measure
+                                            }else if (ik.measure == "кг" && item.measure == "шт"
+                                                && temp.title in measureTrans.measureVals) {
+                                                var t = measureTrans.transFromKgToSht(ik)
                                                 temp.amount = item.amount!! - t.amount!!
                                                 temp.measure = t.measure
                                             }else {

@@ -119,7 +119,7 @@ class AddIngredActivity : AppCompatActivity() {
         }
         Handler(Looper.getMainLooper()).postDelayed({
             readDbData()
-        }, 500)
+        }, 700)
     }
     fun init() {
         rcView?.layoutManager = LinearLayoutManager(this)
