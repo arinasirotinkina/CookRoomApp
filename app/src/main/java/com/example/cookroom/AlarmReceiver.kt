@@ -10,7 +10,7 @@ import androidx.core.app.NotificationManagerCompat
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, p1: Intent?) {
 
-        var i = Intent(context, MainActivity::class.java)
+        val i = Intent(context,MainActivity::class.java)
         i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         val pendingIntent = PendingIntent.getActivity(context, 0, i, 0)
 

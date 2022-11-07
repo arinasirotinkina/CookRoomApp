@@ -14,7 +14,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class DepenDbManager {
-
+    //добавление связи в БД
     fun insertToDb(context: Context, recipe_id: String, product_id: String, title: String, amount:String, measure: String, user_id: String) {
         val stringRequest = object : StringRequest(
             Method.POST, DbLinkConstants.URL_DEP_INSERT,
@@ -44,6 +44,7 @@ class DepenDbManager {
         requestQueue.add(stringRequest)
 
     }
+    //удаление связи из БД
     fun removeItemFromDb(context: Context, user_id: String, title: String, recipe_id: String) {
         val stringRequest = object : StringRequest(
             Method.POST, DbLinkConstants.URL_DEP_DELETE,

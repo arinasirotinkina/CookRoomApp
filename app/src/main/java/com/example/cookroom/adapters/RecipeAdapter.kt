@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cookroom.R
 import com.example.cookroom.db.recipes.RecipeIntentConstants
 import com.example.cookroom.models.RecipeItem
 import com.example.cookroom.EditRecipeActivity
+import com.example.cookroom.db.ShopDbManager
 
 //адаптер для  рецептов
 class RecipeAdapter(listMain: ArrayList<RecipeItem>, contextM: Context): RecyclerView.Adapter<RecipeAdapter.MyHolder>() {
@@ -53,5 +55,12 @@ class RecipeAdapter(listMain: ArrayList<RecipeItem>, contextM: Context): Recycle
         listArray.clear()
         listArray.addAll(listItems)
         notifyDataSetChanged()
+    }
+    fun removeItem(pos: Int, context: Context) {
+        var title = listArray[pos].title
+        Toast.makeText(context, title, Toast.LENGTH_LONG).show()
+        listArray.removeAt(pos)
+        notifyItemRangeChanged(0, listArray.size)
+        notifyItemRemoved(pos)
     }
 }

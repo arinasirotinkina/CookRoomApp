@@ -13,7 +13,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class ShopDbManager {
-
+    //добавление покупки в БД
     fun insertToDb(context: Context, title: String, amount: String,
                    measure: String, user_id: String) {
         var URL_INS = DbLinkConstants.URL_SHOP_INSERT
@@ -45,7 +45,7 @@ class ShopDbManager {
         val requestQueue = Volley.newRequestQueue(context)
         requestQueue.add(stringRequest)
     }
-
+    //удаление покупки из БД
     fun deleteFromDb(context: Context, user_id: String, title: String) {
         val stringRequest = object : StringRequest(
             Method.POST, DbLinkConstants.URL_SHOP_DELETE,

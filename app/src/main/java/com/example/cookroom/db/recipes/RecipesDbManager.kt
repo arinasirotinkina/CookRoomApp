@@ -11,7 +11,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class RecipesDbManager {
-
+    //добавление рецепта в БД
     fun insertToDb(context: Context, title: String, description: String, user_id: String) {
         val stringRequest = object : StringRequest(
             Method.POST, DbLinkConstants.URL_REC_INSERT,
@@ -38,7 +38,7 @@ class RecipesDbManager {
         requestQueue.add(stringRequest)
 
     }
-
+    //изменение рецепта в БД
     fun updateToDB(context: Context, title: String, description: String,
                    user_id: String, id: String) {
         val stringRequest = object : StringRequest(
@@ -67,6 +67,7 @@ class RecipesDbManager {
         requestQueue.add(stringRequest)
 
     }
+    //удаление рецепта из БД
     fun deleteFromDb(context: Context, user_id: String, recipe_id: String) {
         val stringRequest = object : StringRequest(
             Method.POST, DbLinkConstants.URL_REC_DELETE,

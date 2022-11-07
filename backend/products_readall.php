@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
 
     require_once 'connection.php';
 
-    $sql = "SELECT * FROM products WHERE category='$category' AND user_id='$user_id'";
+    $sql = "SELECT * FROM products WHERE category='$category' AND user_id='$user_id' ORDER BY title";
 
     $response = mysqli_query($conn, $sql);
 

@@ -2,6 +2,8 @@ package com.example.cookroom
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +31,7 @@ class ShoplistFragment : Fragment() {
     var tvNoElem: TextView? = null
     var shopDbManager= ShopDbManager()
     var newFB : FloatingActionButton? = null
+    var delFB : FloatingActionButton? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,9 +40,13 @@ class ShoplistFragment : Fragment() {
         tvNoElem = view?.findViewById(R.id.tvNoElem)
         rcView = view?.findViewById(R.id.rcView)
         newFB = view.findViewById(R.id.fbNew)
+        delFB = view.findViewById(R.id.fbDel)
         newFB?.setOnClickListener{
             val i = Intent(requireContext(), EditShopItemActivity::class.java)
             startActivity(i)
+        }
+        delFB?.setOnClickListener {
+            readRecipes(false)
         }
         return view
     }
@@ -47,7 +54,10 @@ class ShoplistFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         init()
-        readRecipes()
+        readRecipes(true)
+        Handler(Looper.getMainLooper()).postDelayed({
+            readRecipes(true)
+        }, 700)
     }
 
     fun init() {
@@ -86,7 +96,7 @@ class ShoplistFragment : Fragment() {
         })
     }
     //Чтение из базы
-    fun readRecipes() {
+    fun readRecipes(fb: Boolean) {
         val pref = requireActivity().getSharedPreferences("User_Id", AppCompatActivity.MODE_PRIVATE)
         val user_id = pref.getString("user_id", "-1")
         val stringRequest = object : StringRequest(
@@ -107,10 +117,17 @@ class ShoplistFragment : Fragment() {
                             item.category = ""
                             item.amount = obj.getString("amount").trim().toDouble()
                             item.measure = obj.getString("measure").trim()
-                            list.add(item)
+                            if (!fb) {
+                                shopDbManager.deleteFromDb(requireContext(), user_id!!, item.title!!)
+                            } else {
+                                list.add(item)
+                            }
                         }
                     }
-                    fillAdapter(list)
+
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        fillAdapter(list)
+                    }, 500)
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }

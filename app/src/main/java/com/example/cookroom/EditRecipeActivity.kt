@@ -18,6 +18,8 @@ import com.example.cookroom.models.MeasureTrans
 import com.example.cookroom.models.ProdItem
 import org.json.JSONException
 import org.json.JSONObject
+import kotlin.math.ceil
+import kotlin.math.round
 
 //Активность редактирования/добавления рецепта
 class EditRecipeActivity : AppCompatActivity() {
@@ -187,7 +189,7 @@ class EditRecipeActivity : AppCompatActivity() {
                                     item.amount = obj.getString("amount").trim().toDouble()
                                     item.measure = obj.getString("measure").trim()
                                     item.id = obj.getString("id").trim().toInt()
-                                    var measureTrans = MeasureTrans()
+                                    val measureTrans = MeasureTrans()
                                     for (ik in list) {
                                         if (ik.id == item.id) {
                                             val temp = ProdItem()
@@ -208,24 +210,24 @@ class EditRecipeActivity : AppCompatActivity() {
                                                 temp.measure = item.measure
                                                 temp.amount = item.amount!! - ik.amount!! * 1000
                                             } else if (ik.measure == "шт" && item.measure == "г"
-                                                && temp.title in measureTrans.measureVals) {
+                                                && measureTrans.getCoef(temp.title!!) != 1.0) {
                                                 val t = measureTrans.transFromShtToG(ik)
                                                 temp.amount = item.amount!! - t.amount!!
                                                 temp.measure = t.measure
                                             } else if (ik.measure == "шт" && item.measure == "кг"
-                                                && temp.title in measureTrans.measureVals) {
+                                                && measureTrans.getCoef(temp.title!!) != 1.0) {
                                                 val t = measureTrans.transFromShtToKg(ik)
-                                                temp.amount = item.amount!! - t.amount!!
+                                                temp.amount = item.amount!! - round(t.amount!!* 100) / 100
                                                 temp.measure = t.measure
                                             } else if (ik.measure == "г" && item.measure == "шт"
-                                                && temp.title in measureTrans.measureVals) {
+                                                && measureTrans.getCoef(temp.title!!) != 1.0) {
                                                 var t = measureTrans.transFromGToSht(ik)
-                                                temp.amount = item.amount!! - t.amount!!
+                                                temp.amount = item.amount!! - ceil(t.amount!!)
                                                 temp.measure = t.measure
                                             }else if (ik.measure == "кг" && item.measure == "шт"
-                                                && temp.title in measureTrans.measureVals) {
-                                                var t = measureTrans.transFromKgToSht(ik)
-                                                temp.amount = item.amount!! - t.amount!!
+                                                && measureTrans.getCoef(temp.title!!) != 1.0) {
+                                                val t = measureTrans.transFromKgToSht(ik)
+                                                temp.amount = (item.amount!! - ceil(t.amount!!))
                                                 temp.measure = t.measure
                                             }else {
                                                 temp.measure = ik.measure

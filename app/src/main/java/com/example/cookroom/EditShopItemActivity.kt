@@ -2,6 +2,7 @@ package com.example.cookroom
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
 import android.widget.EditText
 import android.widget.Spinner
@@ -26,6 +27,8 @@ class EditShopItemActivity : AppCompatActivity() {
         setContentView(R.layout.activity_edit_shop_item)
         edTitle = findViewById(R.id.edTitle)
         edAmount = findViewById(R.id.edAmount)
+        edAmount?.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
+
         edMeasure = findViewById(R.id.edMeasure)
         getMyIntents()
     }

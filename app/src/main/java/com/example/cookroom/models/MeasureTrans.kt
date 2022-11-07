@@ -1,7 +1,7 @@
 package com.example.cookroom.models
 
+//класс перевода
 class MeasureTrans {
-    val measureVals = listOf("яблоки")
     fun getCoef(title: String): Double{
         var coef = 1.0
         if (title.lowercase() == "яблоко" || title.lowercase() == "яблоки") {

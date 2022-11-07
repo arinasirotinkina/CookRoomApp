@@ -9,4 +9,18 @@
         <item>л</item>
         <item>мл</item>
     </string-array>
+    <string-array name="categoryVals">
+        <item>Фрукты</item>
+        <item>Овощи</item>
+        <item>Кисломолочные</item>
+        <item>Крупы</item>
+        <item>Мясо</item>
+        <item>Рыба</item>
+        <item>Хлеб</item>
+        <item>Кондитерские</item>
+        <item>Специи</item>
+        <item>Консервы</item>
+        <item>Напитки</item>
+        <item>Другое</item>
+    </string-array>
 </resources>

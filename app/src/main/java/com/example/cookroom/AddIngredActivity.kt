@@ -1,17 +1,18 @@
 package com.example.cookroom
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
+import android.icu.util.Measure
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.InputType
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.AuthFailureError
-import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -20,11 +21,8 @@ import com.example.cookroom.db.DbLinkConstants
 import com.example.cookroom.db.DepenDbManager
 import com.example.cookroom.db.products.ProductsDbManager
 import com.example.cookroom.models.ProdItem
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.concurrent.TimeUnit
 
 //Активность добавления ингредиентов
 class AddIngredActivity : AppCompatActivity() {
@@ -36,17 +34,18 @@ class AddIngredActivity : AppCompatActivity() {
     var depenDbManager = DepenDbManager()
     var addTitle : AutoCompleteTextView? = null
     var selectList = ArrayList<String>()
+    var flag = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_ingred)
-
         val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
         val user_id = pref.getString("user_id", "-1")
         addIngreds = findViewById(R.id.addButton)
         addTitle = findViewById(R.id.addTitle)
         addAmount = findViewById(R.id.addAmount)
         rcView = findViewById(R.id.rcView)
+        addAmount?.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
 
         val selList = ArrayList<String>()
         selectList = productsDbManager.selector(this, user_id!!, selList)
@@ -71,56 +70,75 @@ class AddIngredActivity : AppCompatActivity() {
 
     //слушатель нажатий кнопки добавления ингредиентов
     fun AddIngred(view: View) {
-        val kt = intent
-        val recipeId = kt.getStringExtra("CHOSEN")
         val addMeasure = findViewById<Spinner>(R.id.chooseMeasure)
+        val addCategory = findViewById<Spinner>(R.id.addCategory)
         val amount = addAmount?.text.toString()
         val measure = addMeasure?.selectedItem.toString()
         val title = addTitle!!.text.toString()
         val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
         val user_id = pref.getString("user_id", "-1")
-        if (title !in selectList || amount.toDoubleOrNull() == null) {
+        if (amount.toDoubleOrNull() == null && amount.toIntOrNull() == null) {
             Toast.makeText(this, "Количество введено не в числовом формате", Toast.LENGTH_LONG).show()
-        } else {
-            val stringRequest = object : StringRequest(
-                Method.POST, DbLinkConstants.URL_PROD_GETID,
-                Response.Listener<String> { response ->
-                    try {
-                        val jsonObject = JSONObject(response.toString())
-                        val success = jsonObject.getString("success")
-                        val jsonArray = jsonObject.getJSONArray("product")
-                        if (success.equals("1")) {
-                            for (i in 0 until jsonArray.length()) {
-                                val obj = jsonArray.getJSONObject(i)
-                                val ids = obj.getString("id").trim()
-                                addTitle?.setText("")
-                                addAmount?.setText("")
-                                depenDbManager.insertToDb(this, recipeId!!, ids, title,
-                                    amount, measure, user_id!!)
-                            }
-                        }
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                    }
-                },
-                Response.ErrorListener { error ->
-                    Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
-                }) {
-                @Throws(AuthFailureError::class)
-                override fun getParams(): Map<String, String>? {
-                    val params: HashMap<String, String> = HashMap()
-                    params["user_id"] = user_id!!
-                    params["title"] = title
-                    return params
-                }
+        }else if (title !in selectList && !flag) {
+            Toast.makeText(this, "", Toast.LENGTH_LONG).show()
+            addCategory?.visibility = View.VISIBLE
+            flag = true
+        }
+        else {
+            if (addCategory?.selectedItem.toString() != "" && flag) {
+                productsDbManager.insertToDb(this, title, addCategory?.selectedItem.toString(),
+                    "0", measure, user_id!!)
+                flag = false
+                addCategory?.visibility = View.GONE
             }
-            val requestQueue = Volley.newRequestQueue(this)
-            requestQueue.add(stringRequest)
+            Handler(Looper.getMainLooper()).postDelayed({
+                addToBase(title, amount, measure, user_id!!)
+            }, 400)
         }
         Handler(Looper.getMainLooper()).postDelayed({
             readDbData()
-        }, 700)
+        }, 1000)
     }
+    fun addToBase(title:String, amount: String, measure: String, user_id: String) {
+        //добавление связи в базу
+        val kt = intent
+        val recipeId = kt.getStringExtra("CHOSEN")
+        val stringRequest = object : StringRequest(
+            Method.POST, DbLinkConstants.URL_PROD_GETID,
+            Response.Listener { response ->
+                try {
+                    val jsonObject = JSONObject(response.toString())
+                    val success = jsonObject.getString("success")
+                    val jsonArray = jsonObject.getJSONArray("product")
+                    if (success.equals("1")) {
+                        for (i in 0 until jsonArray.length()) {
+                            val obj = jsonArray.getJSONObject(i)
+                            val ids = obj.getString("id").trim()
+                            addTitle?.setText("")
+                            addAmount?.setText("")
+                            depenDbManager.insertToDb(this, recipeId!!, ids, title,
+                                amount, measure, user_id)
+                        }
+                    }
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            },
+            Response.ErrorListener { error ->
+                Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
+            }) {
+            @Throws(AuthFailureError::class)
+            override fun getParams(): Map<String, String>? {
+                val params: HashMap<String, String> = HashMap()
+                params["user_id"] = user_id!!
+                params["title"] = title
+                return params
+            }
+        }
+        val requestQueue = Volley.newRequestQueue(this)
+        requestQueue.add(stringRequest)
+    }
+    //инициализация адаптера
     fun init() {
         rcView?.layoutManager = LinearLayoutManager(this)
         val swapHelper = getSwapMg(this)

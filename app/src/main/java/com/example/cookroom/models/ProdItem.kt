@@ -3,6 +3,7 @@ package com.example.cookroom.models
 import android.os.Parcel
 import android.os.Parcelable
 
+//класс продукта
 class ProdItem() : Parcelable{
     var id : Int? = 0
     var title : String? = null

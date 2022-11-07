@@ -2,6 +2,7 @@ package com.example.cookroom
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
 import android.widget.*
 import com.example.cookroom.db.products.ProdIntentConstants
@@ -26,6 +27,8 @@ class EditProductActivity : AppCompatActivity() {
         edTitle = findViewById(R.id.edTitle)
         edAmount = findViewById(R.id.edAmount)
         edMeasure = findViewById(R.id.edMeasure)
+        edAmount?.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
+
         getMyIntents()
     }
     //Слушатель нажатий кнопки сохранения

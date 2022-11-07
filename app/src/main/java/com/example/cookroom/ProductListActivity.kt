@@ -4,6 +4,8 @@ package com.example.cookroom
 import java.util.ArrayList;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler
+import android.os.Looper
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast
@@ -38,9 +40,12 @@ class ProductListActivity : AppCompatActivity() {
         init()
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         readDbData()
+        Handler(Looper.getMainLooper()).postDelayed({
+            readDbData()
+        }, 700)
     }
 
     //Слушатель нажатия кнопки добавления продукта

@@ -11,7 +11,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class UserDbManager {
-
+    //добавление времени в БД
     fun turnOnAlarm(context: Context, user_id: String, time: String) {
         var stringRequest = object : StringRequest(
             Method.POST, DbLinkConstants.URL_TURN_ON,
@@ -36,6 +36,7 @@ class UserDbManager {
         requestQueue.add(stringRequest)
 
     }
+    //удаление времени из БД
     fun turnOffAlarm(context: Context, user_id: String) {
         val stringRequest = object : StringRequest(
             Method.POST, DbLinkConstants.URL_TURN_OFF,

@@ -31,6 +31,7 @@ class AbleCookActivity : AppCompatActivity() {
         val minus_list = kt.getParcelableArrayListExtra<ProdItem>("minus_list")
         val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
         val user_id = pref.getString("user_id", "-1")
+        //уменьшение продуктов
         val stringRequest = object : StringRequest(
             Method.POST, DbLinkConstants.URL_PROD_SELECT,
             Response.Listener { response ->
@@ -40,7 +41,7 @@ class AbleCookActivity : AppCompatActivity() {
                     val jsonArray = jsonObject.getJSONArray("product")
                     if (success.equals("1")) {
                         for (i in 0 until jsonArray.length()) {
-                            var obj = jsonArray.getJSONObject(i)
+                            val obj = jsonArray.getJSONObject(i)
                             val id = obj.getString("id").trim()
                             for (ik in minus_list!!) {
                                 if (ik.id.toString() == id) {

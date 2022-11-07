@@ -1,5 +1,6 @@
 package com.example.cookroom.models
 
+//класс категории
 class CategoryItem {
     var icons: Int? = 0
     var name: String? = null
