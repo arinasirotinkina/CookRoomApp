@@ -4,29 +4,19 @@ import android.content.Context
 import android.widget.Toast
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
-import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.cookroom.adapters.ItemProductAdapter
-import com.example.cookroom.models.ProdItem
-
+import com.example.cookroom.db.DbLinkConstants
 import org.json.JSONException
 import org.json.JSONObject
 
 class ProductsDbManager {
 
-    var URL_INSERT = "https://cookroom.site/products_insert.php"
-    var URL_READ = "https://cookroom.site/products_readall.php"
-    val URL_UPDATE = "https://cookroom.site/products_update.php"
-    val URL_SELECT = "https://cookroom.site/products_select.php"
-    var selectList = ArrayList<String>()
-    var prod : String = ""
-
     fun insertToDb(context: Context, title: String, category: String, amount: String,
                    measure: String, user_id: String){
-        var stringRequest = object : StringRequest(
-            Method.POST, URL_INSERT,
-            Response.Listener<String> { response ->
+        val stringRequest = object : StringRequest(
+            Method.POST, DbLinkConstants.URL_PROD_INSERT,
+            Response.Listener { response ->
                 try {
                     val obj = JSONObject(response.toString())
                     Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show()
@@ -34,30 +24,27 @@ class ProductsDbManager {
                     e.printStackTrace()
                 }
             },
-            object : Response.ErrorListener {
-                override fun onErrorResponse(error: VolleyError?) {
-                    Toast.makeText(context, error?.message, Toast.LENGTH_LONG).show()
-                }
-            }) {
+            Response.ErrorListener { error ->
+                Toast.makeText(context, error?.message, Toast.LENGTH_LONG).show() }) {
             @Throws(AuthFailureError::class)
-            override fun getParams(): Map<String, String>? {
-                var params : HashMap<String, String> = HashMap<String, String>()
-                params.put("title", title)
-                params.put("category",category)
-                params.put("amount", amount)
-                params.put("measure", measure)
-                params.put("user_id", user_id)
+            override fun getParams(): Map<String, String> {
+                val params : HashMap<String, String> = HashMap()
+                params["title"] = title
+                params["category"] = category
+                params["amount"] = amount
+                params["measure"] = measure
+                params["user_id"] = user_id
                 return params
             }
         }
-        var requestQueue = Volley.newRequestQueue(context)
+        val requestQueue = Volley.newRequestQueue(context)
         requestQueue.add(stringRequest)
 
     }
     fun updateToDB(context: Context, title: String, category: String, amount: String, measure: String, user_id: String, id: String) {
-        var stringRequest = object : StringRequest(
-            Method.POST, URL_UPDATE,
-            Response.Listener<String> { response ->
+        val stringRequest = object : StringRequest(
+            Method.POST, DbLinkConstants.URL_PROD_UPD,
+            Response.Listener { response ->
                 try {
                     val obj = JSONObject(response.toString())
                     Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show()
@@ -65,24 +52,21 @@ class ProductsDbManager {
                     e.printStackTrace()
                 }
             },
-            object : Response.ErrorListener {
-                override fun onErrorResponse(error: VolleyError?) {
-                    Toast.makeText(context, error?.message, Toast.LENGTH_LONG).show()
-                }
-            }) {
+            Response.ErrorListener { error ->
+                Toast.makeText(context, error?.message, Toast.LENGTH_LONG).show() }) {
             @Throws(AuthFailureError::class)
-            override fun getParams(): Map<String, String>? {
-                var params : HashMap<String, String> = HashMap<String, String>()
-                params.put("title", title)
-                params.put("category",category)
-                params.put("amount", amount)
-                params.put("measure", measure)
-                params.put("user_id", user_id)
-                params.put("id", id)
+            override fun getParams(): Map<String, String> {
+                val params : HashMap<String, String> = HashMap()
+                params["title"] = title
+                params["category"] = category
+                params["amount"] = amount
+                params["measure"] = measure
+                params["user_id"] = user_id
+                params["id"] = id
                 return params
             }
         }
-        var requestQueue = Volley.newRequestQueue(context)
+        val requestQueue = Volley.newRequestQueue(context)
         requestQueue.add(stringRequest)
 
     }
@@ -90,17 +74,17 @@ class ProductsDbManager {
         fun setId(ids: String) {
             selList.add(ids)
         }
-        var stringRequest = object : StringRequest(
-            Method.POST, URL_SELECT,
-            Response.Listener<String> { response ->
+        val stringRequest = object : StringRequest(
+            Method.POST, DbLinkConstants.URL_PROD_SELECT,
+            Response.Listener { response ->
                 try {
                     val jsonObject = JSONObject(response.toString())
                     val success = jsonObject.getString("success")
                     val jsonArray = jsonObject.getJSONArray("product")
                     if (success.equals("1")) {
                         for (i in 0 until jsonArray.length()) {
-                            var obj = jsonArray.getJSONObject(i)
-                            var ids = obj.getString("title").trim()
+                            val obj = jsonArray.getJSONObject(i)
+                            val ids = obj.getString("title").trim()
                             setId(ids)
                         }
                     }
@@ -108,86 +92,17 @@ class ProductsDbManager {
                     e.printStackTrace()
                 }
             },
-            object : Response.ErrorListener {
-                override fun onErrorResponse(error: VolleyError?) {
-                    Toast.makeText(context, error?.message, Toast.LENGTH_LONG).show()
-                }
-            }) {
+            Response.ErrorListener { error ->
+                Toast.makeText(context, error?.message, Toast.LENGTH_LONG).show() }) {
             @Throws(AuthFailureError::class)
-            override fun getParams(): Map<String, String>? {
-                var params : HashMap<String, String> = HashMap<String, String>()
-                params.put("user_id", user_id)
+            override fun getParams(): Map<String, String> {
+                val params : HashMap<String, String> = HashMap()
+                params["user_id"] = user_id
                 return params
             }
         }
-        //Toast.makeText(context, prod, Toast.LENGTH_LONG).show()
-        var requestQueue = Volley.newRequestQueue(context)
+        val requestQueue = Volley.newRequestQueue(context)
         requestQueue.add(stringRequest)
         return selList
     }
-
-/*
-    fun readDbData(context: Context, category: String, user_id: String): ArrayList<ProdItem> {
-        var dataList = ArrayList<ProdItem>()
-        fun readItem(item: ProdItem) {
-            dataList.add(item)
-        }
-        var prodAdapter = ItemProductAdapter(ArrayList(), context)
-        var stringRequest = object : StringRequest(
-            Method.POST, URL_READ,
-            Response.Listener<String> { response ->
-
-                try {
-                    val jsonObject = JSONObject(response.toString())
-                    val success = jsonObject.getString("success")
-                    val jsonArray = jsonObject.getJSONArray("product")
-                    val list = ArrayList<ProdItem>()
-                    //Toast.makeText(context,  success.toString(), Toast.LENGTH_LONG).show()
-
-                    if (success.equals("1")) {
-                        //Toast.makeText(context, jsonArray.length().toString(), Toast.LENGTH_LONG).show()
-                        for (i in 0 until jsonArray.length()) {
-                            val obj = jsonArray.getJSONObject(i)
-                            val id = obj.getString("id").trim()
-                            var title = obj.getString("title").trim()
-                            var category = obj.getString("category").trim()
-                            var amount = obj.getString("amount").trim()
-                            var measure = obj.getString("measure").trim()
-                            //Toast.makeText(context, title, Toast.LENGTH_LONG).show()
-                            var item = ProdItem()
-                            item.title = title
-                            item.category = category
-                            item.amount = amount.toInt()
-                            item.measure = measure
-                            item.id = id.toInt()
-                            list.add(item)
-
-                        }
-                    }
-                    //Toast.makeText(context, list.size.toString(), Toast.LENGTH_LONG).show()
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-            },
-            object : Response.ErrorListener {
-                override fun onErrorResponse(error: VolleyError?) {
-                    Toast.makeText(context, error?.message, Toast.LENGTH_LONG).show()
-                }
-            }) {
-            @Throws(AuthFailureError::class)
-            override fun getParams(): Map<String, String>? {
-                var params : HashMap<String, String> = HashMap<String, String>()
-                params.put("category","Мясные продукты")
-                params.put("user_id", "21")
-                return params
-            }
-        }
-        //Toast.makeText(context, dataList.size.toString(), Toast.LENGTH_LONG).show()
-
-        var requestQueue = Volley.newRequestQueue(context)
-        requestQueue.add(stringRequest)
-
-        return dataList
-    }*/
-
 }

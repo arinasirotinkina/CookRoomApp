@@ -16,6 +16,7 @@ import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.cookroom.adapters.ItemProductAdapter
+import com.example.cookroom.db.DbLinkConstants
 import com.example.cookroom.models.ProdItem
 import org.json.JSONException
 import org.json.JSONObject
@@ -67,31 +68,15 @@ class ProductListActivity : AppCompatActivity() {
             tvNoElem?.visibility = View.VISIBLE
         }
     }
-    /*private fun getSwapMg() : ItemTouchHelper {
-        return ItemTouchHelper(object: ItemTouchHelper.
-        SimpleCallback(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT){
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
 
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                myAdapter.removeItem(viewHolder.adapterPosition, myDbManager)
-            }
-        })
-    }*/
     //Чтение данных из базы
-    fun readDbData() {
-        val URL_READ = "https://cookroom.site/products_readall.php"
+    private fun readDbData() {
         val kt = intent
         prodCategory = kt.getCharSequenceExtra("CHOSEN").toString()
         val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
         val user_id = pref.getString("user_id", "-1")
         val stringRequest = object : StringRequest(
-            Method.POST, URL_READ,
+            Method.POST, DbLinkConstants.URL_PROD_READ,
             Response.Listener { response ->
                 try {
                     val jsonObject = JSONObject(response.toString())
@@ -115,14 +100,14 @@ class ProductListActivity : AppCompatActivity() {
                     e.printStackTrace()
                 }
             },
-            Response.ErrorListener {
-                //Toast.makeText(this, error.message , Toast.LENGTH_LONG).show()
+            Response.ErrorListener { error ->
+                Toast.makeText(this, error.message , Toast.LENGTH_LONG).show()
             }) {
             @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String> {
                 var params : HashMap<String, String> = HashMap()
-                params.put("category",prodCategory!!)
-                params.put("user_id", user_id!!)
+                params["category"] = prodCategory!!
+                params["user_id"] = user_id!!
                 return params
             }
         }

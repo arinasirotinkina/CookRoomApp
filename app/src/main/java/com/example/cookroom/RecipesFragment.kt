@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,7 @@ import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.cookroom.adapters.RecipeAdapter
+import com.example.cookroom.db.DbLinkConstants
 import com.example.cookroom.models.RecipeItem
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONException
@@ -66,33 +68,13 @@ class RecipesFragment : Fragment() {
             tvNoElem?.visibility = View.VISIBLE
         }
     }
-    /*
-    private fun getSwapMg() : ItemTouchHelper {
-        //val myDbManager = RecipeDbManager(requireContext())
-        val myAdapter = RecipeAdapter(ArrayList(), requireContext())
-        return ItemTouchHelper(object: ItemTouchHelper.
-        SimpleCallback(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT){
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                myAdapter.removeItem(viewHolder.adapterPosition, myDbManager)
-            }
-        })
-    }*/
 
     //Чтение рецептов из базы
-    fun readRecipes() {
-        val URL_READ1 = "https://cookroom.site/recipes_readall.php"
+    private fun readRecipes() {
         val pref = requireActivity().getSharedPreferences("User_Id", AppCompatActivity.MODE_PRIVATE)
         val user_id = pref.getString("user_id", "-1")
         val stringRequest = object : StringRequest(
-            Method.POST, URL_READ1,
+            Method.POST, DbLinkConstants.URL_REC_READ,
             Response.Listener { response ->
                 try {
                     val jsonObject = JSONObject(response.toString())
@@ -114,13 +96,13 @@ class RecipesFragment : Fragment() {
                     e.printStackTrace()
                 }
             },
-            Response.ErrorListener {
-                //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
+            Response.ErrorListener { error ->
+                Toast.makeText(requireContext(), error?.message, Toast.LENGTH_LONG).show()
             }) {
             @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String>? {
                 var params : HashMap<String, String> = HashMap<String, String>()
-                params.put("user_id", user_id!!)
+                params["user_id"] = user_id!!
                 return params
             }
         }

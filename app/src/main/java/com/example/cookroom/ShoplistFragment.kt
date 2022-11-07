@@ -16,6 +16,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.cookroom.adapters.ShopItemAdapter
+import com.example.cookroom.db.DbLinkConstants
 import com.example.cookroom.db.ShopDbManager
 import com.example.cookroom.models.ProdItem
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -86,11 +87,10 @@ class ShoplistFragment : Fragment() {
     }
     //Чтение из базы
     fun readRecipes() {
-        val URL_READ1 = "https://cookroom.site/shop_readall.php"
         val pref = requireActivity().getSharedPreferences("User_Id", AppCompatActivity.MODE_PRIVATE)
         val user_id = pref.getString("user_id", "-1")
         val stringRequest = object : StringRequest(
-            Method.POST, URL_READ1,
+            Method.POST, DbLinkConstants.URL_SHOP_READ,
             Response.Listener { response ->
                 try {
                     val jsonObject = JSONObject(response.toString())

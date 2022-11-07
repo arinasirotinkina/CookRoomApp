@@ -11,6 +11,7 @@ import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.cookroom.adapters.NotHaveAdapter
+import com.example.cookroom.db.DbLinkConstants
 import com.example.cookroom.db.ShopDbManager
 import com.example.cookroom.models.ProdItem
 import org.json.JSONException
@@ -45,9 +46,8 @@ class DisableCookActivity : AppCompatActivity() {
         addToShop = findViewById(R.id.addToShop)
         addToShop?.setOnClickListener {
             for (item in d) {
-                val URL_SELECT = "https://cookroom.site/shop_select.php"
                 val stringRequest = object : StringRequest(
-                    Method.POST, URL_SELECT,
+                    Method.POST, DbLinkConstants.URL_SHOP_SELECT,
                     Response.Listener { response ->
                         try {
                             val jsonObject = JSONObject(response.toString())

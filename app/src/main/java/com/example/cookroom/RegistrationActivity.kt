@@ -12,6 +12,7 @@ import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.cookroom.db.DbLinkConstants
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -22,7 +23,7 @@ class RegistrationActivity : AppCompatActivity() {
     var passwordConfirm : EditText? = null
     var registerButton : Button? = null
     var alreadyHaveAcc : TextView? = null
-    var URL_REGIST = "https://cookroom.site/register.php"
+    var URL_REGIST = DbLinkConstants.URL_REGIST
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

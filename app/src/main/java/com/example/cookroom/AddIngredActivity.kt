@@ -3,6 +3,8 @@ package com.example.cookroom
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.*
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -14,11 +16,15 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.cookroom.adapters.IngredAdapter
+import com.example.cookroom.db.DbLinkConstants
 import com.example.cookroom.db.DepenDbManager
 import com.example.cookroom.db.products.ProductsDbManager
 import com.example.cookroom.models.ProdItem
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import org.json.JSONException
 import org.json.JSONObject
+import java.util.concurrent.TimeUnit
 
 //Активность добавления ингредиентов
 class AddIngredActivity : AppCompatActivity() {
@@ -73,12 +79,11 @@ class AddIngredActivity : AppCompatActivity() {
         val title = addTitle!!.text.toString()
         val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
         val user_id = pref.getString("user_id", "-1")
-        val URL_SEARCH = "http://arinasyw.beget.tech/products_getid.php"
         if (title !in selectList || amount.toDoubleOrNull() == null) {
             Toast.makeText(this, "Количество введено не в числовом формате", Toast.LENGTH_LONG).show()
         } else {
             val stringRequest = object : StringRequest(
-                Method.POST, URL_SEARCH,
+                Method.POST, DbLinkConstants.URL_PROD_GETID,
                 Response.Listener<String> { response ->
                     try {
                         val jsonObject = JSONObject(response.toString())
@@ -110,10 +115,11 @@ class AddIngredActivity : AppCompatActivity() {
                 }
             }
             val requestQueue = Volley.newRequestQueue(this)
-            //stringRequest.setRetryPolicy(DefaultRetryPolicy(20000, 3, 1.0f))
             requestQueue.add(stringRequest)
         }
-        readDbData()
+        Handler(Looper.getMainLooper()).postDelayed({
+            readDbData()
+        }, 500)
     }
     fun init() {
         rcView?.layoutManager = LinearLayoutManager(this)
@@ -127,13 +133,12 @@ class AddIngredActivity : AppCompatActivity() {
     }
     //Чтение ингредиентов из базы
     fun readDbData() {
-        val URL_READ = "https://cookroom.site/depending_readall.php"
         val kt = intent
         val recipeId = kt.getStringExtra("CHOSEN")
         val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
         val user_id = pref.getString("user_id", "-1")
         val stringRequest = object : StringRequest(
-            Method.POST, URL_READ,
+            Method.POST, DbLinkConstants.URL_DEP_READ,
             Response.Listener { response ->
                 try {
                     val jsonObject = JSONObject(response.toString())

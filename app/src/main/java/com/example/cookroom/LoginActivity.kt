@@ -12,6 +12,7 @@ import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.cookroom.db.DbLinkConstants
 import org.json.JSONException
 import org.json.JSONObject
 import kotlin.jvm.Throws
@@ -23,7 +24,7 @@ class LoginActivity : AppCompatActivity() {
     var loginButton : Button? = null
     var notHaveAcc : TextView? = null
     var sessionManager = SessionManager(this)
-    var URL_LOGIN = "https://cookroom.site/login.php"
+    var URL_LOGIN = DbLinkConstants.URL_LOGIN
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

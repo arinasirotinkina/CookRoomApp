@@ -11,6 +11,7 @@ import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.cookroom.db.DbLinkConstants
 import com.example.cookroom.db.recipes.RecipeIntentConstants
 import com.example.cookroom.db.recipes.RecipesDbManager
 import com.example.cookroom.models.MeasureTrans
@@ -91,9 +92,8 @@ class EditRecipeActivity : AppCompatActivity() {
                 isEditState = true
             }
         }
-        val URL_SEARCH = "https://cookroom.site/recipes_getid.php"
         val stringRequest = object : StringRequest(
-            Method.POST, URL_SEARCH,
+            Method.POST, DbLinkConstants.URL_REC_GETID,
             Response.Listener { response ->
                 try {
                     val jsonObject = JSONObject(response.toString())
@@ -110,8 +110,8 @@ class EditRecipeActivity : AppCompatActivity() {
                     e.printStackTrace()
                 }
             },
-            Response.ErrorListener {
-                //Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
+            Response.ErrorListener { error ->
+                Toast.makeText(this, error?.message, Toast.LENGTH_LONG).show()
             }) {
             @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String> {
@@ -170,9 +170,8 @@ class EditRecipeActivity : AppCompatActivity() {
                     }
                 }
                 //Сравнение количества продукта пользователя и количества ингредиента
-                val URL_SELECT = "https://cookroom.site/products_select.php"
                 val stringRequest = object : StringRequest(
-                    Method.POST, URL_SELECT,
+                    Method.POST, DbLinkConstants.URL_PROD_SELECT,
                     Response.Listener { response ->
                         try {
                             val jsonObject = JSONObject(response.toString())
@@ -188,6 +187,7 @@ class EditRecipeActivity : AppCompatActivity() {
                                     item.amount = obj.getString("amount").trim().toDouble()
                                     item.measure = obj.getString("measure").trim()
                                     item.id = obj.getString("id").trim().toInt()
+                                    var measureTrans = MeasureTrans()
                                     for (ik in list) {
                                         if (ik.id == item.id) {
                                             val temp = ProdItem()
@@ -202,22 +202,25 @@ class EditRecipeActivity : AppCompatActivity() {
                                             ) {
                                                 temp.measure = item.measure
                                                 temp.amount = item.amount!! - ik.amount!! / 1000
-                                                //Toast.makeText(this, temp.amount.toString(), Toast.LENGTH_LONG).show()
                                             } else if ((ik.measure == "кг" && item.measure == "г")
                                                 || (ik.measure == "л" && item.measure == "мл")
                                             ) {
                                                 temp.measure = item.measure
                                                 temp.amount = item.amount!! - ik.amount!! * 1000
-                                            } else if (ik.measure == "шт" && item.measure == "г") {
-                                                var p = MeasureTrans()
-                                                var t = p.transFromShtToG(ik)
+                                            } else if (ik.measure == "шт" && item.measure == "г"
+                                                && temp.title in measureTrans.measureVals) {
+                                                val t = measureTrans.transFromShtToG(ik)
                                                 temp.amount = item.amount!! - t.amount!!
                                                 temp.measure = t.measure
-                                            } else if (ik.measure == "шт" && item.measure == "кг") {
-                                                var p = MeasureTrans()
-                                                var t = p.transFromShtToKg(ik)
+                                            } else if (ik.measure == "шт" && item.measure == "кг"
+                                                && temp.title in measureTrans.measureVals) {
+                                                val t = measureTrans.transFromShtToKg(ik)
                                                 temp.amount = item.amount!! - t.amount!!
-                                                Toast.makeText(this, temp.amount.toString(), Toast.LENGTH_LONG).show()
+                                                temp.measure = t.measure
+                                            } else if (ik.measure == "г" && item.measure == "шт"
+                                                && temp.title in measureTrans.measureVals) {
+                                                var t = measureTrans.transFromShtToG(item)
+                                                temp.amount = item.amount!! - t.amount!!
                                                 temp.measure = t.measure
                                             }else {
                                                 temp.measure = ik.measure
@@ -248,11 +251,10 @@ class EditRecipeActivity : AppCompatActivity() {
 
             }
             //Получение ингредиентов рецепта
-            val URL_READ = "https://cookroom.site/depending_readall.php"
             val pref = this.getSharedPreferences("User_Id", MODE_PRIVATE)
             val user_id = pref.getString("user_id", "-1")
             val stringRequest = object : StringRequest(
-                Method.POST, URL_READ,
+                Method.POST, DbLinkConstants.URL_DEP_READ,
                 Response.Listener { response ->
                     try {
                         val jsonObject = JSONObject(response.toString())
@@ -293,9 +295,9 @@ class EditRecipeActivity : AppCompatActivity() {
         }
 
         //Получение id рецепта
-        val URL_SEARCH = "https://cookroom.site/recipes_getid.php"
+
         val stringRequest = object : StringRequest(
-            Method.POST, URL_SEARCH,
+            Method.POST, DbLinkConstants.URL_REC_GETID,
             Response.Listener { response ->
                 try {
                     val jsonObject = JSONObject(response.toString())
