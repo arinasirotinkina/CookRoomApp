@@ -17,7 +17,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val builder = NotificationCompat.Builder(context, "CookRoom")
             .setSmallIcon(R.drawable.apple)
             .setContentTitle("CookRoom")
-            .setContentText("Ваши продукты заканчиваются! Добавьте их в список покупок")
+            .setContentText("Ваши продукты заканчиваются! Не забудьте сходить в магазин!")
             .setAutoCancel(true)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setPriority(NotificationCompat.PRIORITY_HIGH)

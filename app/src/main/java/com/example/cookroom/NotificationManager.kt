@@ -15,7 +15,7 @@ class NotificationManager() {
     fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "CookRoom";
-            val description = "Ваши продукты заканчиваются! Добавьте их в список покупок";
+            val description = "Ваши продукты заканчиваются! Не забудьте сходить в магазин!";
             val importance = NotificationManager.IMPORTANCE_HIGH;
             val channel = NotificationChannel("CookRoom", name, importance);
             channel.description = description;
