@@ -1,6 +1,5 @@
 package com.example.cookroom.adapters
 
-
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -14,6 +13,7 @@ import com.example.cookroom.R
 import com.example.cookroom.db.products.ProdIntentConstants
 import com.example.cookroom.models.ProdItem
 
+//адаптер для нехватки продуктов
 class NotHaveAdapter(listMain: ArrayList<ProdItem>, contextM: Context): RecyclerView.Adapter<NotHaveAdapter.MyHolder>() {
     var listArray = listMain
     var context = contextM

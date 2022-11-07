@@ -217,6 +217,7 @@ class EditRecipeActivity : AppCompatActivity() {
                                                 var p = MeasureTrans()
                                                 var t = p.transFromShtToKg(ik)
                                                 temp.amount = item.amount!! - t.amount!!
+                                                Toast.makeText(this, temp.amount.toString(), Toast.LENGTH_LONG).show()
                                                 temp.measure = t.measure
                                             }else {
                                                 temp.measure = ik.measure

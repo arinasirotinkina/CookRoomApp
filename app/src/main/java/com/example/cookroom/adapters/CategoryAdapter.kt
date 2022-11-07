@@ -9,6 +9,7 @@ import android.widget.TextView
 import com.example.cookroom.R
 import com.example.cookroom.models.CategoryItem
 
+//адаптер для категорий
 class  CategoryAdapter(var context: Context, var arrayList: ArrayList<CategoryItem>): BaseAdapter() {
     override fun getCount(): Int {
         return arrayList.size

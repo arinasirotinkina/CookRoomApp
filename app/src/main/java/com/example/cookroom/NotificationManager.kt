@@ -36,7 +36,7 @@ class NotificationManager() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationManager.deleteNotificationChannel("CookRoom")
         }
-        Toast.makeText(context, "Alarm Cancelled", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(context, "Alarm Cancelled", Toast.LENGTH_SHORT).show()
     }
     //Установка уведомлений
     fun setAlarm(context: Context, time:String) {
@@ -52,7 +52,7 @@ class NotificationManager() {
                 val intent = Intent(context, AlarmReceiver::class.java)
                 val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
                 alarmManager?.setRepeating(
-                    AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                    AlarmManager.RTC_WAKEUP, calendar.timeInMillis,
                     AlarmManager.INTERVAL_DAY, pendingIntent
                 )
                 Toast.makeText(context, "Alarm set Successfully", Toast.LENGTH_SHORT).show()

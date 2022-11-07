@@ -1,6 +1,5 @@
 package com.example.cookroom.adapters
 
-
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -14,6 +13,7 @@ import com.example.cookroom.R
 import com.example.cookroom.db.products.ProdIntentConstants
 import com.example.cookroom.models.ProdItem
 
+//адаптер для продуктов
 class ItemProductAdapter(listMain: ArrayList<ProdItem>, contextM: Context): RecyclerView.Adapter<ItemProductAdapter.MyHolder>() {
     var listArray = listMain
     var context = contextM
@@ -28,12 +28,10 @@ class ItemProductAdapter(listMain: ArrayList<ProdItem>, contextM: Context): Recy
             var amountCeil = item.amount.toString()
             if (item.amount!! % 1.0 == 0.0) {
                 amountCeil = item.amount!!.toInt().toString()
-                //Toast.makeText(context, amountCeil, Toast.LENGTH_SHORT).show()
             }
             tvAmount.text = amountCeil
             tvMeasure.text = item.measure
             itemView.setOnClickListener{
-                //Toast.makeText(context, item.amount.toString(), Toast.LENGTH_LONG).show()
                 val intent = Intent(context, EditProductActivity::class.java).apply {
                     putExtra(ProdIntentConstants.I_TITLE_KEY, item.title)
                     putExtra(ProdIntentConstants.I_CATEGORY_KEY, item.category)
@@ -63,11 +61,4 @@ class ItemProductAdapter(listMain: ArrayList<ProdItem>, contextM: Context): Recy
         listArray.addAll(listItems)
         notifyDataSetChanged()
     }
-    /*
-    fun removeItem(pos: Int, dbManager: ProdDbManager) {
-        dbManager.removeItemFromDb(listArray[pos].id.toString())
-        listArray.removeAt(pos)
-        notifyItemRangeChanged(0, listArray.size)
-        notifyItemRemoved(pos)
-    }*/
 }

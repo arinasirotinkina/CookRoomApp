@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.AuthFailureError
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -92,7 +93,6 @@ class AddIngredActivity : AppCompatActivity() {
                                 depenDbManager.insertToDb(this, recipeId!!, ids, title,
                                     amount, measure, user_id!!)
                             }
-                            readDbData()
                         }
                     } catch (e: JSONException) {
                         e.printStackTrace()
@@ -110,8 +110,10 @@ class AddIngredActivity : AppCompatActivity() {
                 }
             }
             val requestQueue = Volley.newRequestQueue(this)
+            //stringRequest.setRetryPolicy(DefaultRetryPolicy(20000, 3, 1.0f))
             requestQueue.add(stringRequest)
         }
+        readDbData()
     }
     fun init() {
         rcView?.layoutManager = LinearLayoutManager(this)

@@ -12,6 +12,7 @@ import com.example.cookroom.db.recipes.RecipeIntentConstants
 import com.example.cookroom.models.RecipeItem
 import com.example.cookroom.EditRecipeActivity
 
+//адаптер для  рецептов
 class RecipeAdapter(listMain: ArrayList<RecipeItem>, contextM: Context): RecyclerView.Adapter<RecipeAdapter.MyHolder>() {
     var listArray = listMain
     var context = contextM
@@ -53,10 +54,4 @@ class RecipeAdapter(listMain: ArrayList<RecipeItem>, contextM: Context): Recycle
         listArray.addAll(listItems)
         notifyDataSetChanged()
     }
-    /*fun removeItem(pos: Int, dbManager: RecipeDbManager) {
-        dbManager.removeItemFromDb(listArray[pos].id.toString())
-        listArray.removeAt(pos)
-        notifyItemRangeChanged(0, listArray.size)
-        notifyItemRemoved(pos)
-    }*/
 }

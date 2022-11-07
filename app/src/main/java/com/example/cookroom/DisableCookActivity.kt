@@ -31,7 +31,7 @@ class DisableCookActivity : AppCompatActivity() {
         val d = ArrayList<ProdItem>()
         val minus_list = kt.getParcelableArrayListExtra<ProdItem>("minus_list")
         for (item in minus_list!!) {
-            if (item.amount!!.toInt() < 0) {
+            if (item.amount!!.toDouble() < 0) {
                 val temp = ProdItem()
                 temp.id = item.id
                 temp.title = item.title

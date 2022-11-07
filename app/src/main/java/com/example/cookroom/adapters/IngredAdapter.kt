@@ -13,6 +13,7 @@ import com.example.cookroom.db.DepenDbManager
 import com.example.cookroom.db.products.ProductsDbManager
 import com.example.cookroom.models.ProdItem
 
+//адаптер для ингредиентов
 class IngredAdapter(listMain: ArrayList<ProdItem>, contextM: Context): RecyclerView.Adapter<IngredAdapter.MyHolder>() {
     var listArray = listMain
     var context = contextM
@@ -26,7 +27,6 @@ class IngredAdapter(listMain: ArrayList<ProdItem>, contextM: Context): RecyclerV
             var amountCeil = item.amount.toString()
             if (item.amount!! % 1.0 == 0.0) {
                 amountCeil = item.amount!!.toInt().toString()
-                //Toast.makeText(context, amountCeil, Toast.LENGTH_SHORT).show()
             }
             tvAmount.text = amountCeil
             tvTitle.text = item.title
@@ -47,12 +47,6 @@ class IngredAdapter(listMain: ArrayList<ProdItem>, contextM: Context): RecyclerV
         return listArray.size
     }
 
-
-
-
-
-
-
     fun updateAdapter(listItems: List<ProdItem>) {
         listArray.clear()
         listArray.addAll(listItems)
@@ -62,7 +56,6 @@ class IngredAdapter(listMain: ArrayList<ProdItem>, contextM: Context): RecyclerV
         var title = listArray[pos].title
         dbManager.removeItemFromDb(context, user_id, title!!, recipe_id)
         listArray.removeAt(pos)
-
         notifyItemRangeChanged(0, listArray.size)
         notifyItemRemoved(pos)
     }

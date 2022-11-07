@@ -5,7 +5,8 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ShoplistFragment" >
+    android:onClick="onClickNew"
+    tools:context=".ShoplistFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcView"
@@ -24,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="28dp"
         android:layout_marginBottom="36dp"
-        android:clickable="true"
+
         android:onClick="onClickNew"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

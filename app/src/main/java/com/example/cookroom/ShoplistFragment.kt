@@ -1,5 +1,6 @@
 package com.example.cookroom
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import com.android.volley.toolbox.Volley
 import com.example.cookroom.adapters.ShopItemAdapter
 import com.example.cookroom.db.ShopDbManager
 import com.example.cookroom.models.ProdItem
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -25,6 +27,7 @@ class ShoplistFragment : Fragment() {
     private var rcView: RecyclerView? = null
     var tvNoElem: TextView? = null
     var shopDbManager= ShopDbManager()
+    var newFB : FloatingActionButton? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,6 +35,11 @@ class ShoplistFragment : Fragment() {
         var view = inflater.inflate(R.layout.fragment_shoplist, container, false)
         tvNoElem = view?.findViewById(R.id.tvNoElem)
         rcView = view?.findViewById(R.id.rcView)
+        newFB = view.findViewById(R.id.fbNew)
+        newFB?.setOnClickListener{
+            val i = Intent(requireContext(), EditShopItemActivity::class.java)
+            startActivity(i)
+        }
         return view
     }
 
@@ -44,6 +52,7 @@ class ShoplistFragment : Fragment() {
     fun init() {
         rcView?.layoutManager = LinearLayoutManager(requireContext())
     }
+
     //Заполнение списка
     fun fillAdapter(list: ArrayList<ProdItem>) {
         val myAdapter = ShopItemAdapter(ArrayList(), requireContext())

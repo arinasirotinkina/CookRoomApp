@@ -1,6 +1,5 @@
 package com.example.cookroom.adapters
 
-
 import android.content.Context
 import android.content.Intent
 import android.icu.text.CaseMap
@@ -11,12 +10,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cookroom.EditProductActivity
+import com.example.cookroom.EditShopItemActivity
 import com.example.cookroom.R
 import com.example.cookroom.db.DepenDbManager
 import com.example.cookroom.db.ShopDbManager
 import com.example.cookroom.db.products.ProdIntentConstants
 import com.example.cookroom.models.ProdItem
 
+//адаптер для покупок
 class ShopItemAdapter(listMain: ArrayList<ProdItem>, contextM: Context): RecyclerView.Adapter<ShopItemAdapter.MyHolder>() {
     var listArray = listMain
     var context = contextM
@@ -31,13 +32,15 @@ class ShopItemAdapter(listMain: ArrayList<ProdItem>, contextM: Context): Recycle
             var amountCeil = item.amount.toString()
             if (item.amount!! % 1.0 == 0.0) {
                 amountCeil = item.amount!!.toInt().toString()
-                //Toast.makeText(context, amountCeil, Toast.LENGTH_SHORT).show()
             }
             tvAmount.text = amountCeil
             tvMeasure.text = item.measure
+            if (amountCeil == "0") {
+                tvAmount.text = ""
+                tvMeasure.text = ""
+            }
             itemView.setOnClickListener{
-                //Toast.makeText(context, item.amount.toString(), Toast.LENGTH_LONG).show()
-                val intent = Intent(context, EditProductActivity::class.java).apply {
+                val intent = Intent(context, EditShopItemActivity::class.java).apply {
                     putExtra(ProdIntentConstants.I_TITLE_KEY, item.title)
                     putExtra(ProdIntentConstants.I_CATEGORY_KEY, item.category)
                     putExtra(ProdIntentConstants.I_AMOUNT_KEY, amountCeil)
